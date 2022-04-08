@@ -1,5 +1,12 @@
 package com.lpi.budgy
 
+import com.github.ajalt.mordant.rendering.BorderStyle
+import com.github.ajalt.mordant.rendering.TextAlign
+import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.table.Borders
+import com.github.ajalt.mordant.table.ColumnWidth
+import com.github.ajalt.mordant.table.table
+import com.github.ajalt.mordant.terminal.Terminal
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -36,19 +43,53 @@ class Snapshot(val date: LocalDate, val balances: Set<Balance>) {
 
 }
 
-class TerminalReport(val book: Book, val snapshots: List<Snapshot>) {
-    fun display() {
-        val dateFormat = DateTimeFormatter.ofPattern("MMM dd, u")
-        snapshots.forEach { snapshot ->
-            println(snapshot.date.format(dateFormat))
-            book.institutions.forEach { institution ->
-                println("* ${institution.name}")
-                book.accountsIn(institution).forEach { account ->
-                    println("   - ${account.name}: ${formatBalance(snapshot.accountBalance(account))}")
+class TerminalReport(private val book: Book, private val snapshots: List<Snapshot>) {
+    private val dateFormat = DateTimeFormatter.ofPattern("MMM dd, u")
+
+    val table = table {
+        column(0) { width = ColumnWidth.Fixed(2) }
+        borderStyle = BorderStyle.SQUARE_DOUBLE_SECTION_SEPARATOR
+        header {
+            row {
+                cell("") { columnSpan = 2 }
+                snapshots.map {
+                    cell(it.date.format(dateFormat))
                 }
             }
-            println("TOTAL: ${formatAmount(snapshot.total())}\n")
         }
+
+        body {
+            book.institutions.map {
+                row {
+                    style(TextColors.brightYellow, bold = true)
+                    cell(it.name) { columnSpan = 2 + snapshots.size }
+                }
+                book.accountsIn(it).map { account ->
+                    row {
+                        borders = Borders.LEFT_RIGHT
+                        cell("")
+                        cell(account.name)
+                        snapshots.map { snapshot ->
+                            cell(formatBalance(snapshot.accountBalance(account))) { align = TextAlign.RIGHT }
+                        }
+                    }
+                }
+            }
+        }
+
+        footer {
+            row {
+                style(TextColors.yellow, bold = true)
+                cell("TOTAL") { columnSpan = 2 }
+                snapshots.map {
+                    cell(formatAmount(it.total())) { align = TextAlign.RIGHT }
+                }
+            }
+        }
+    }
+
+    fun displayAsTable() {
+        Terminal().println(table)
     }
 
     private fun formatBalance(balance: Balance?) = balance?.let { formatAmount(it.value) } ?: "-"

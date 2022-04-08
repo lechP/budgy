@@ -11,4 +11,5 @@ repositories {
 
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.10'
+    implementation 'com.github.ajalt.mordant:mordant:2.0.0-beta4'
 }

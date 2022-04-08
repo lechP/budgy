@@ -2,7 +2,7 @@ package com.lpi.budgy
 
 
 fun main() {
-    val theBank = Institution("Some Kind of Bank")
+    val theBank = Institution("Some Bank")
     val checkingAccount = Account(theBank,"Checking")
     val savingsAccount = Account(theBank, "Savings")
 
@@ -32,5 +32,5 @@ fun main() {
         )
     )
 
-    TerminalReport(book, snapshots).display()
+    TerminalReport(book, snapshots).displayAsTable()
 }
