@@ -2,9 +2,19 @@ package com.lpi.budgy
 
 
 fun main() {
+    // Risk levels
+    val cash = RiskLevel("Cash", "\uD83D\uDFE2") // green circle
+    val realEstate = RiskLevel("Real Estate", "\uD83D\uDFE1") // yellow circle
+    val lowRisk = RiskLevel("Low Risk", "\uD83D\uDFE0") // orange circle
+    val highRisk = RiskLevel("High Risk", "\uD83D\uDD34") // red circle
+    val riskLevels = listOf(cash, realEstate, lowRisk, highRisk)
+
+    //Tags
+    val downPayment = Tag("Down Payment") // can be used for down payment
+
     val theBank = Institution("Some Bank")
-    val checkingAccount = Account(theBank,"Checking")
-    val savingsAccount = Account(theBank, "Savings")
+    val checkingAccount = Account(theBank,"Checking", AccountMetadata(cash))
+    val savingsAccount = Account(theBank, "Savings", AccountMetadata(lowRisk, setOf(downPayment)))
 
 
     val houses = Institution("Houses")
@@ -12,7 +22,7 @@ fun main() {
     val home = Account(houses, "Home") // but home belongs to me and loan is provided by separate institution!!
     val car = Account(cars, "Car")
 
-    val book = Book(listOf(theBank, houses, cars), listOf(checkingAccount, savingsAccount, home, car))
+    val book = Book(listOf(theBank, houses, cars), listOf(checkingAccount, savingsAccount, home, car), riskLevels, listOf(downPayment))
 
 
     val snapshots = listOf(
@@ -32,5 +42,5 @@ fun main() {
         )
     )
 
-    TerminalReport(book, snapshots).displayAsTable()
+    TerminalReport(book, snapshots, TerminalReportOptions(true)).displayAsTable()
 }
