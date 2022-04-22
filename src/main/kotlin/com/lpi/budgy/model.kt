@@ -2,6 +2,8 @@ package com.lpi.budgy
 
 import java.time.LocalDate
 
+data class Currency(val id: String, val symbol: String)
+
 data class RiskLevel(val name: String, val symbol: String)
 data class Tag(val name: String)
 
@@ -14,17 +16,23 @@ data class Book(
     val institutions: List<Institution>,
     val accounts: List<Account>,
     val riskLevels: List<RiskLevel>,
-    val tags: List<Tag>
+    val tags: List<Tag>,
+    val currencies: Set<Currency>,
+    val mainCurrency: Currency
     ) {
     fun accountsIn(institution: Institution): List<Account> = accounts.filter { it.institution == institution }
 }
 
 // I think it's not exactly equivalent of a wallet, rather something more formal
 data class Institution(val name: String)
-
 // I'd group my assets by wallets and keep institutions as some kind of metadata
 
-data class Account(val institution: Institution, val name: String, val metadata: AccountMetadata = AccountMetadata()) {
+data class Account(
+    val institution: Institution,
+    val name: String,
+    val currency: Currency,
+    val metadata: AccountMetadata = AccountMetadata()
+) {
     fun balance(value: Double) = Balance(this, value)
     fun balance(value: Int) = Balance(this, value.toDouble())
 
