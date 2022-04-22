@@ -1,5 +1,7 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id 'application'
+    id 'distribution'
 }
 
 group 'com.lpi'
@@ -12,4 +14,8 @@ repositories {
 dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.6.10'
     implementation 'com.github.ajalt.mordant:mordant:2.0.0-beta4'
+}
+
+application {
+    mainClass.set("com.lpi.budgy.MainKt")
 }

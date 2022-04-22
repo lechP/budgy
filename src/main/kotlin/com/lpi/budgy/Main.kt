@@ -1,7 +1,8 @@
 package com.lpi.budgy
 
 
-fun main() {
+fun main(args: Array<String>) {
+    println("Args: ${args.joinToString(", ")}")
     // Risk levels
     val cash = RiskLevel("Cash", "\uD83D\uDFE2") // green circle
     val realEstate = RiskLevel("Real Estate", "\uD83D\uDFE1") // yellow circle
