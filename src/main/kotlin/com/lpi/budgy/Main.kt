@@ -2,7 +2,6 @@ package com.lpi.budgy
 
 
 fun main(args: Array<String>) {
-    println("Args: ${args.joinToString(", ")}")
     // Risk levels
     val cash = RiskLevel("Cash", "\uD83D\uDFE2") // green circle
     val realEstate = RiskLevel("Real Estate", "\uD83D\uDFE1") // yellow circle
@@ -24,7 +23,7 @@ fun main(args: Array<String>) {
     val home = Account(houses, "Home", AccountMetadata(realEstate, setOf(property))) // but home belongs to me and loan is provided by separate institution!!
     val car = Account(cars, "Car")
 
-    val book = Book(listOf(theBank, houses, cars), listOf(checkingAccount, savingsAccount, home, car), riskLevels, listOf(downPayment))
+    val book = Book(listOf(theBank, houses, cars), listOf(checkingAccount, savingsAccount, home, car), riskLevels, listOf(downPayment, property))
 
 
     val snapshots = listOf(
@@ -44,5 +43,5 @@ fun main(args: Array<String>) {
         )
     )
 
-    TerminalReport(book, snapshots, TerminalReportOptions(displayTotalsByRiskLevel = true, displayTags = true, filterByTag = null)).displayAsTable()
+    Budgy(book, snapshots).main(args)
 }
