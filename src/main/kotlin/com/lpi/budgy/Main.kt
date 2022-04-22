@@ -11,6 +11,7 @@ fun main() {
 
     //Tags
     val downPayment = Tag("Down Payment") // can be used for down payment
+    val property = Tag("Property")
 
     val theBank = Institution("Some Bank")
     val checkingAccount = Account(theBank,"Checking", AccountMetadata(cash))
@@ -19,7 +20,7 @@ fun main() {
 
     val houses = Institution("Houses")
     val cars = Institution("Cars")
-    val home = Account(houses, "Home") // but home belongs to me and loan is provided by separate institution!!
+    val home = Account(houses, "Home", AccountMetadata(realEstate, setOf(property))) // but home belongs to me and loan is provided by separate institution!!
     val car = Account(cars, "Car")
 
     val book = Book(listOf(theBank, houses, cars), listOf(checkingAccount, savingsAccount, home, car), riskLevels, listOf(downPayment))
@@ -42,5 +43,5 @@ fun main() {
         )
     )
 
-    TerminalReport(book, snapshots, TerminalReportOptions(true)).displayAsTable()
+    TerminalReport(book, snapshots, TerminalReportOptions(displayTotalsByRiskLevel = true, displayTags = true, filterByTag = null)).displayAsTable()
 }

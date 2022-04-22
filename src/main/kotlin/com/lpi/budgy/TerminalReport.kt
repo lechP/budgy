@@ -10,7 +10,11 @@ import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
 import java.time.format.DateTimeFormatter
 
-data class TerminalReportOptions(val displayTotalsByRiskLevel: Boolean = false)
+data class TerminalReportOptions(
+    val displayTotalsByRiskLevel: Boolean = false,
+    val displayTags: Boolean = false,
+    val filterByTag: Tag? = null,
+)
 
 class TerminalReport(
     private val book: Book,
@@ -43,16 +47,16 @@ class TerminalReport(
 
     private fun TableBuilder.accountsRows() {
         body {
-            book.institutions.map {
+            book.institutions.filter { book.accountsIn(it).applyTagFilter().isNotEmpty() }.map {
                 row {
                     style(TextColors.brightYellow, bold = true)
                     cell(it.name) { columnSpan = 2 + snapshots.size }
                 }
-                book.accountsIn(it).map { account ->
+                book.accountsIn(it).applyTagFilter().map { account ->
                     row {
                         borders = Borders.LEFT_RIGHT
                         cell(account.metadata.riskLevel?.symbol ?: "")
-                        cell(account.name)
+                        cell(account.label())
                         snapshots.map { snapshot ->
                             cell(formatBalance(snapshot.accountBalance(account))) { align = TextAlign.RIGHT }
                         }
@@ -61,6 +65,18 @@ class TerminalReport(
             }
         }
     }
+
+    private fun List<Account>.applyTagFilter() =
+        filter { account -> account.matchesTagFilter() }
+
+    private fun Account.matchesTagFilter() =
+        options.filterByTag == null || metadata.tags.contains(options.filterByTag)
+
+    private fun Account.label() = name + tagsIfDisplayable()
+
+    private fun Account.tagsIfDisplayable() =
+        TextColors.gray(" (${metadata.tags.joinToString(", ") { it.name }})")
+            .takeIf { options.displayTags && metadata.tags.isNotEmpty() } ?: ""
 
     private fun TableBuilder.totalByRiskLevel() {
         body {
@@ -102,9 +118,11 @@ class TerminalReport(
 
     private fun formatAmount(amount: Double) = String.format("%,.0f", amount)
 
-    private fun Snapshot.total() = balances.sumOf { it.value }
+    private fun Snapshot.total() = balances.filter { it.account.matchesTagFilter() }.sumOf { it.value }
     private fun Snapshot.totalForRiskLevel(riskLevel: RiskLevel) =
-        balances.filter { it.account.metadata.riskLevel == riskLevel }.sumOf { it.value }
+        balances.filter {
+            it.account.metadata.riskLevel == riskLevel && it.account.matchesTagFilter()
+        }.sumOf { it.value }
 
     private fun Snapshot.percentageForRiskLevel(riskLevel: RiskLevel) = totalForRiskLevel(riskLevel) / total()
 
