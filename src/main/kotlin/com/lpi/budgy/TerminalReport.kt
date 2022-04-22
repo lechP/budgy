@@ -119,7 +119,7 @@ class TerminalReport(
     }
 
     // TODO balance might be displayed in original and main currency
-    private fun formatBalance(balance: Balance?, date: LocalDate) =
+    private fun formatBalance(balance: MonetaryBalance?, date: LocalDate) =
         balance?.let { formatAmount(it.toValue(book.mainCurrency, date)) } ?: "-"
 
     private fun formatAmount(amount: Double) = String.format("%,.0f", amount)

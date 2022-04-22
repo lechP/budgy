@@ -1,6 +1,7 @@
 package com.lpi.budgy
 
 import com.lpi.budgy.currency.CurrencyConverter
+import com.lpi.budgy.stock.StockApi
 import org.kodein.di.DI
 import org.kodein.di.conf.global
 import org.kodein.di.instance
@@ -37,20 +38,31 @@ data class Account(
     val currency: Currency,
     val metadata: AccountMetadata = AccountMetadata()
 ) {
-    fun balance(value: Double) = Balance(this, value)
-    fun balance(value: Int) = Balance(this, value.toDouble())
+    fun monetaryBalance(value: Double) = MonetaryBalance(this, value)
+    fun monetaryBalance(value: Int) = MonetaryBalance(this, value.toDouble())
 
-    fun balanceWithLoans(value: Double, loans: List<Double>) = BalanceWithLoans(this, value, loans)
+    fun balanceWithLoans(value: Double, loans: List<Double>) = MonetaryBalanceWithLoans(this, value, loans)
     fun balanceWithLoans(value: Int, loans: List<Int>) =
-        BalanceWithLoans(this, value.toDouble(), loans.map { it.toDouble() })
+        MonetaryBalanceWithLoans(this, value.toDouble(), loans.map { it.toDouble() })
     // XD - and what about value as Int and loans as Doubles? It doesn't scale up well
+
+    fun stocksBalance(stockAmounts: Map<String, Double>): StocksBalance {
+        return StocksBalance(this, stockAmounts, false)
+    }
+    fun cryptosBalance(cryptoAmounts: Map<String, Double>): StocksBalance {
+        return StocksBalance(this, cryptoAmounts, true)
+    }
+}
+
+abstract class Balance(open val account: Account) {
+    abstract fun toValue(currency: Currency, date: LocalDate): Double
 }
 
 // this "open" stuff is to be refactored
-open class Balance(open val account: Account, open val value: Double) {
+open class MonetaryBalance(override val account: Account, open val value: Double) : Balance(account) {
     private val currencyConverter: CurrencyConverter by DI.global.instance()
 
-    fun toValue(currency: Currency, date: LocalDate): Double =
+    override fun toValue(currency: Currency, date: LocalDate): Double =
         currencyConverter.convert(value, account.currency.id, currency.id, date)
 
 }
@@ -58,11 +70,26 @@ open class Balance(open val account: Account, open val value: Double) {
 // meant for "house with mortgage(s)" but I don't really like it
 // house and mortgage should be two separate accounts, maybe connected on a higher level of abstraction such as
 // Wallet - set of accounts
-class BalanceWithLoans(account: Account, value: Double, loans: List<Double>) : Balance(account, value - loans.sum())
+class MonetaryBalanceWithLoans(account: Account, value: Double, loans: List<Double>) :
+    MonetaryBalance(account, value - loans.sum())
 
-class Snapshot(val date: LocalDate, val balances: Set<Balance>) {
-    constructor(date: String, balances: Set<Balance>) : this(LocalDate.parse(date), balances)
+// hmm... InvestmentBalance? What about investment funds, ETFs etc?
+class StocksBalance(
+    account: Account,
+    private val stocksAmounts: Map<String, Double>,
+    private val isCrypto: Boolean // OMG
+) : Balance(account) {
+    private val stockApi: StockApi by DI.global.instance()
 
-    fun accountBalance(account: Account): Balance? = balances.find { it.account == account }
+    override fun toValue(currency: Currency, date: LocalDate): Double =
+        stocksAmounts.map { (symbol, amount) -> stockApi.value(symbol, currency, date) * amount }.sum()
+
+}
+
+
+class Snapshot(val date: LocalDate, val balances: Set<MonetaryBalance>) {
+    constructor(date: String, balances: Set<MonetaryBalance>) : this(LocalDate.parse(date), balances)
+
+    fun accountBalance(account: Account): MonetaryBalance? = balances.find { it.account == account }
 
 }

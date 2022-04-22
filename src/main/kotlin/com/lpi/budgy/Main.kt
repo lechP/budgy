@@ -48,18 +48,18 @@ fun main(args: Array<String>) {
         Snapshot(
             date = "2022-01-01",
             balances = setOf(
-                checkingAccount.balance(500),
-                savingsAccount.balance(2000),
-                savingsEurAccount.balance(100),
+                checkingAccount.monetaryBalance(500),
+                savingsAccount.monetaryBalance(2000),
+                savingsEurAccount.monetaryBalance(100),
                 home.balanceWithLoans(150_000, listOf(140_000)),
                 car.balanceWithLoans(15_000, listOf(7_000))
             )
         ), Snapshot(
             date = "2022-02-01",
             balances = setOf(
-                checkingAccount.balance(600),
-                savingsAccount.balance(2500),
-                savingsEurAccount.balance(120),
+                checkingAccount.monetaryBalance(600),
+                savingsAccount.monetaryBalance(2500),
+                savingsEurAccount.monetaryBalance(120),
             )
         )
     )
