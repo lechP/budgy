@@ -1,5 +1,9 @@
 package com.lpi.budgy
 
+import com.lpi.budgy.currency.CurrencyConverter
+import org.kodein.di.DI
+import org.kodein.di.conf.global
+import org.kodein.di.instance
 import java.time.LocalDate
 
 data class Currency(val id: String, val symbol: String)
@@ -19,7 +23,7 @@ data class Book(
     val tags: List<Tag>,
     val currencies: Set<Currency>,
     val mainCurrency: Currency
-    ) {
+) {
     fun accountsIn(institution: Institution): List<Account> = accounts.filter { it.institution == institution }
 }
 
@@ -43,7 +47,13 @@ data class Account(
 }
 
 // this "open" stuff is to be refactored
-open class Balance(open val account: Account, open val value: Double)
+open class Balance(open val account: Account, open val value: Double) {
+    private val currencyConverter: CurrencyConverter by DI.global.instance()
+
+    fun toValue(currency: Currency, date: LocalDate): Double =
+        currencyConverter.convert(value, account.currency.id, currency.id, date)
+
+}
 
 // meant for "house with mortgage(s)" but I don't really like it
 // house and mortgage should be two separate accounts, maybe connected on a higher level of abstraction such as

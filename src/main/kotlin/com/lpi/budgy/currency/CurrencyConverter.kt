@@ -2,6 +2,10 @@ package com.lpi.budgy.currency
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.lpi.budgy.config.Config
+import org.kodein.di.DI
+import org.kodein.di.conf.global
+import org.kodein.di.instance
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -10,7 +14,8 @@ import java.time.LocalDate
 
 class CurrencyConverter(private val baseCurrency: String = "PLN") {
 
-    private val apikey = "0ef111165c5998476eae593fbcafecb9591cbb8b" // TODO should be injected from properties file
+    private val config: Config by DI.global.instance()
+
     private val baseUrl = "https://api.getgeoapi.com/v2/currency/historical/"
 
     private val ratesCache: MutableMap<ExchangeRateKey, Double> = mutableMapOf()
@@ -28,7 +33,7 @@ class CurrencyConverter(private val baseCurrency: String = "PLN") {
             return cachedRate
         }
 
-        val url = "$baseUrl$date?api_key=$apikey&from=$from&to=$to"
+        val url = "$baseUrl$date?api_key=${config.currencyGetGeoApiKey}&from=$from&to=$to"
         val request = HttpRequest.newBuilder(URI.create(url)).build()
         val client = HttpClient.newBuilder().build()
         val json = client.send(request, HttpResponse.BodyHandlers.ofString()).body()

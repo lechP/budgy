@@ -1,3 +1,6 @@
 /.idea/
 /.gradle/
 /build/
+
+# while secret values are stored there
+application.properties

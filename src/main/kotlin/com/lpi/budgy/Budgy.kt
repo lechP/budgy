@@ -5,6 +5,11 @@ import com.github.ajalt.clikt.parameters.options.convert
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
+import com.lpi.budgy.config.Config
+import com.lpi.budgy.currency.CurrencyConverter
+import org.kodein.di.DI
+import org.kodein.di.bindSingleton
+import org.kodein.di.conf.global
 
 class Budgy(
     private val book: Book,
@@ -17,6 +22,11 @@ class Budgy(
         .convert { tagName -> book.tags.first { it.name == tagName } }
 
     override fun run() {
+        DI.global.addConfig {
+            bindSingleton { Config() }
+            bindSingleton { CurrencyConverter() }
+        }
+
         val options = TerminalReportOptions(
             displayTotalsByRiskLevel = displayTotalsByRiskLevel,
             displayTags = displayTags,

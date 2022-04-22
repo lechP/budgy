@@ -8,7 +8,6 @@ import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.TableBuilder
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
-import com.lpi.budgy.currency.CurrencyConverter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -24,7 +23,6 @@ class TerminalReport(
     private val options: TerminalReportOptions = TerminalReportOptions()
 ) {
 
-    private val currencyConverter = CurrencyConverter()
     private val dateFormat = DateTimeFormatter.ofPattern("MMM dd, u")
 
     private val table = table {
@@ -122,17 +120,17 @@ class TerminalReport(
 
     // TODO balance might be displayed in original and main currency
     private fun formatBalance(balance: Balance?, date: LocalDate) =
-        balance?.let { formatAmount(it.convertValueTo(book.mainCurrency, date)) } ?: "-"
+        balance?.let { formatAmount(it.toValue(book.mainCurrency, date)) } ?: "-"
 
     private fun formatAmount(amount: Double) = String.format("%,.0f", amount)
 
     private fun Snapshot.total() =
-        balances.filter { it.account.matchesTagFilter() }.sumOf { it.convertValueTo(book.mainCurrency, date) }
+        balances.filter { it.account.matchesTagFilter() }.sumOf { it.toValue(book.mainCurrency, date) }
 
     private fun Snapshot.totalForRiskLevel(riskLevel: RiskLevel) =
         balances.filter {
             it.account.metadata.riskLevel == riskLevel && it.account.matchesTagFilter()
-        }.sumOf { it.convertValueTo(book.mainCurrency, date) }
+        }.sumOf { it.toValue(book.mainCurrency, date) }
 
     private fun Snapshot.percentageForRiskLevel(riskLevel: RiskLevel) = totalForRiskLevel(riskLevel) / total()
 
@@ -140,6 +138,4 @@ class TerminalReport(
         return String.format("%,.0f (%2.0f%%)", amount, percentage * 100.0)
     }
 
-    private fun Balance.convertValueTo(currency: Currency, date: LocalDate) =
-        currencyConverter.convert(value, account.currency.id, currency.id, date)
 }
