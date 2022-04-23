@@ -76,8 +76,8 @@ class MonetaryBalanceWithLoans(account: Account, value: Double, loans: List<Doub
 // hmm... InvestmentBalance? What about investment funds, ETFs etc?
 class StocksBalance(
     account: Account,
-    private val stocksAmounts: Map<String, Double>,
-    private val isCrypto: Boolean // OMG
+    val stocksAmounts: Map<String, Double>,
+    val isCrypto: Boolean // OMG
 ) : Balance(account) {
     private val stockApi: StockApi by DI.global.instance()
 
@@ -87,9 +87,9 @@ class StocksBalance(
 }
 
 
-class Snapshot(val date: LocalDate, val balances: Set<MonetaryBalance>) {
-    constructor(date: String, balances: Set<MonetaryBalance>) : this(LocalDate.parse(date), balances)
+class Snapshot(val date: LocalDate, val balances: Set<Balance>) {
+    constructor(date: String, balances: Set<Balance>) : this(LocalDate.parse(date), balances)
 
-    fun accountBalance(account: Account): MonetaryBalance? = balances.find { it.account == account }
+    fun accountBalance(account: Account): Balance? = balances.find { it.account == account }
 
 }

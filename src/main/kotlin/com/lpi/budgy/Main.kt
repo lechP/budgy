@@ -25,6 +25,9 @@ fun main(args: Array<String>) {
     val savingsAccount = Account(theBank, "Savings", pln, AccountMetadata(lowRisk, setOf(downPayment)))
     val savingsEurAccount = Account(theBank, "Savings EUR", eur, AccountMetadata(cash))
 
+    val stockBroker = Institution("Stock broker")
+    val sharesAccount = Account(stockBroker, "Shares", usd, AccountMetadata(highRisk))
+
     val houses = Institution("Houses")
     val cars = Institution("Cars")
     val home = Account(
@@ -36,8 +39,8 @@ fun main(args: Array<String>) {
     val car = Account(cars, "Car", pln)
 
     val book = Book(
-        institutions = listOf(theBank, houses, cars),
-        accounts = listOf(checkingAccount, savingsAccount, savingsEurAccount, home, car),
+        institutions = listOf(theBank, houses, cars, stockBroker),
+        accounts = listOf(checkingAccount, savingsAccount, savingsEurAccount, sharesAccount, home, car),
         riskLevels = riskLevels,
         tags = listOf(downPayment, property),
         currencies = currencies,
@@ -51,6 +54,7 @@ fun main(args: Array<String>) {
                 checkingAccount.monetaryBalance(500),
                 savingsAccount.monetaryBalance(2000),
                 savingsEurAccount.monetaryBalance(100),
+                sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 100.0)),
                 home.balanceWithLoans(150_000, listOf(140_000)),
                 car.balanceWithLoans(15_000, listOf(7_000))
             )
@@ -59,6 +63,7 @@ fun main(args: Array<String>) {
             balances = setOf(
                 checkingAccount.monetaryBalance(600),
                 savingsAccount.monetaryBalance(2500),
+                sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 100.0)),
                 savingsEurAccount.monetaryBalance(120),
             )
         )

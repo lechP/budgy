@@ -7,6 +7,8 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.lpi.budgy.config.Config
 import com.lpi.budgy.currency.CurrencyConverter
+import com.lpi.budgy.stock.AlphaVantageApi
+import com.lpi.budgy.stock.StockApi
 import org.kodein.di.DI
 import org.kodein.di.bindSingleton
 import org.kodein.di.conf.global
@@ -22,9 +24,12 @@ class Budgy(
         .convert { tagName -> book.tags.first { it.name == tagName } }
 
     override fun run() {
+        val (stocks, cryptos) = snapshots.stockAndCryptoSymbols()
+
         DI.global.addConfig {
             bindSingleton { Config() }
             bindSingleton { CurrencyConverter() }
+            bindSingleton<StockApi> { AlphaVantageApi(stocks, cryptos) }
         }
 
         val options = TerminalReportOptions(
@@ -33,5 +38,24 @@ class Budgy(
             filterByTag = filterByTag
         )
         TerminalReport(book, snapshots, options).displayAsTable()
+    }
+
+    // ohh refactor me (start with splitting StocksBalance into SharesBalance and CryptosBalance
+    private fun List<Snapshot>.stockAndCryptoSymbols(): Pair<Set<String>, Set<String>> {
+        val stocks = mutableSetOf<String>()
+        val cryptos = mutableSetOf<String>()
+        forEach { snapshot ->
+            for (balance in snapshot.balances) {
+                if (balance is StocksBalance) {
+                    val symbols = balance.stocksAmounts.keys
+                    if (balance.isCrypto) {
+                        cryptos.addAll(symbols)
+                    } else {
+                        stocks.addAll(symbols)
+                    }
+                }
+            }
+        }
+        return Pair(stocks, cryptos)
     }
 }
