@@ -21,6 +21,8 @@ interface StockApi {
 
 class AlphaVantageApi(stocks: Set<String>, cryptos: Set<String>) : StockApi {
 
+    //https://marketstack.com/ - alternative API, which covers WSE
+
     private val currencyConverter: CurrencyConverter by DI.global.instance()
 
     override fun value(symbol: String, currency: Currency, date: LocalDate): Double {

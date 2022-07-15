@@ -27,6 +27,7 @@ fun main(args: Array<String>) {
 
     val stockBroker = Institution("Stock broker")
     val sharesAccount = Account(stockBroker, "Shares", usd, AccountMetadata(highRisk))
+    val cryptoAccount = Account(stockBroker, "Crypto account", usd, AccountMetadata(highRisk))
 
     val houses = Institution("Houses")
     val cars = Institution("Cars")
@@ -40,7 +41,7 @@ fun main(args: Array<String>) {
 
     val book = Book(
         institutions = listOf(theBank, houses, cars, stockBroker),
-        accounts = listOf(checkingAccount, savingsAccount, savingsEurAccount, sharesAccount, home, car),
+        accounts = listOf(checkingAccount, savingsAccount, savingsEurAccount, sharesAccount, cryptoAccount, home, car),
         riskLevels = riskLevels,
         tags = listOf(downPayment, property),
         currencies = currencies,
@@ -49,21 +50,23 @@ fun main(args: Array<String>) {
 
     val snapshots = listOf(
         Snapshot(
-            date = "2022-01-01",
+            date = "2022-03-01",
             balances = setOf(
                 checkingAccount.monetaryBalance(500),
                 savingsAccount.monetaryBalance(2000),
                 savingsEurAccount.monetaryBalance(100),
                 sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 100.0)),
+                cryptoAccount.cryptosBalance(mapOf("BTC" to 0.1)),
                 home.balanceWithLoans(150_000, listOf(140_000)),
                 car.balanceWithLoans(15_000, listOf(7_000))
             )
         ), Snapshot(
-            date = "2022-02-01",
+            date = "2022-04-01",
             balances = setOf(
                 checkingAccount.monetaryBalance(600),
                 savingsAccount.monetaryBalance(2500),
                 sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 100.0)),
+                cryptoAccount.cryptosBalance(mapOf("BTC" to 0.12)),
                 savingsEurAccount.monetaryBalance(120),
             )
         )
