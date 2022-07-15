@@ -3,8 +3,10 @@ package com.lpi.budgy.stock
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.lpi.budgy.Currency
-import com.lpi.budgy.cache.CacheReader
+import com.lpi.budgy.config.Config
+import com.lpi.budgy.resillience.CacheReader
 import com.lpi.budgy.currency.CurrencyConverter
+import com.lpi.budgy.resillience.RetrySystem
 import org.kodein.di.DI
 import org.kodein.di.conf.global
 import org.kodein.di.instance
@@ -24,8 +26,11 @@ class AlphaVantageApi(stocks: Set<String>, cryptos: Set<String>) : StockApi {
 
     //https://marketstack.com/ - alternative API, which covers WSE
 
+    private val config: Config by DI.global.instance()
+
     private val currencyConverter: CurrencyConverter by DI.global.instance()
     private val cacheReader: CacheReader by DI.global.instance()
+    private val retrySystem = RetrySystem(config.alphaVantageApiKeys)
 
     override fun value(symbol: String, currency: Currency, date: LocalDate): Double {
         val price = valueInDefaultCurrency(symbol, date)
@@ -64,14 +69,18 @@ class AlphaVantageApi(stocks: Set<String>, cryptos: Set<String>) : StockApi {
     }
 
     private fun jsonAtUrl(url: String, cacheKey: String): JsonNode {
-        val json = cacheReader.readOrFetch(cacheKey) {
+        val apiCall = { apiKey: String ->
             val client = HttpClient.newBuilder().build()
-            val urlWithApiKey = url.replace("API_KEY", "BYQ7WNNFU620A4SX")
+            val urlWithApiKey = url.replace("API_KEY", apiKey)
             val request = HttpRequest.newBuilder().uri(URI.create(urlWithApiKey)).build()
             val json = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
             if (json.contains("Thank you for using Alpha Vantage"))
                 throw ApiRateException()
             json
+        }
+
+        val json = cacheReader.readOrFetch(cacheKey) {
+            retrySystem.retry(apiCall)
         }
         return jacksonObjectMapper().readTree(json)
     }

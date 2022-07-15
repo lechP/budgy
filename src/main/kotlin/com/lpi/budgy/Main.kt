@@ -55,8 +55,8 @@ fun main(args: Array<String>) {
                 checkingAccount.monetaryBalance(500),
                 savingsAccount.monetaryBalance(2000),
                 savingsEurAccount.monetaryBalance(100),
-                sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 100.0)),
-                cryptoAccount.cryptosBalance(mapOf("BTC" to 0.1)),
+                sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 100.0, "MSFT" to 20.0)),
+                cryptoAccount.cryptosBalance(mapOf("BTC" to 0.1, "ETH" to 1.5)),
                 home.balanceWithLoans(150_000, listOf(140_000)),
                 car.balanceWithLoans(15_000, listOf(7_000))
             )
@@ -65,8 +65,8 @@ fun main(args: Array<String>) {
             balances = setOf(
                 checkingAccount.monetaryBalance(600),
                 savingsAccount.monetaryBalance(2500),
-                sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 100.0)),
-                cryptoAccount.cryptosBalance(mapOf("BTC" to 0.12)),
+                sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 100.0, "MSFT" to 30.0)),
+                cryptoAccount.cryptosBalance(mapOf("BTC" to 0.12, "ETH" to 1.8)),
                 savingsEurAccount.monetaryBalance(120),
             )
         )

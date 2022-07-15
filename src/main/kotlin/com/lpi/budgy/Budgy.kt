@@ -5,7 +5,7 @@ import com.github.ajalt.clikt.parameters.options.convert
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
-import com.lpi.budgy.cache.CacheReader
+import com.lpi.budgy.resillience.CacheReader
 import com.lpi.budgy.config.Config
 import com.lpi.budgy.currency.CurrencyConverter
 import com.lpi.budgy.stock.AlphaVantageApi
