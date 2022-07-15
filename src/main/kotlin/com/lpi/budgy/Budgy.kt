@@ -13,6 +13,7 @@ import com.lpi.budgy.domain.Snapshot
 import com.lpi.budgy.domain.StocksBalance
 import com.lpi.budgy.report.TerminalReport
 import com.lpi.budgy.report.TerminalReportOptions
+import com.lpi.budgy.report.WebReport
 import com.lpi.budgy.stock.AlphaVantageApi
 import com.lpi.budgy.stock.StockApi
 import org.kodein.di.DI
@@ -28,6 +29,7 @@ class Budgy(
     private val displayTags by option(help = "Display tags for each account").flag()
     private val filterByTag by option(help = "Filter by tag").choice(*book.tags.map { it.name }.toTypedArray())
         .convert { tagName -> book.tags.first { it.name == tagName } }
+    private val web by option(help = "Start a web server").flag()
 
     override fun run() {
         val (stocks, cryptos) = snapshots.stockAndCryptoSymbols()
@@ -44,7 +46,11 @@ class Budgy(
             displayTags = displayTags,
             filterByTag = filterByTag
         )
-        TerminalReport(book, snapshots, options).displayAsTable()
+        if (web) {
+            WebReport(book, snapshots).display()
+        } else {
+            TerminalReport(book, snapshots, options).displayAsTable()
+        }
     }
 
     // ohh refactor me (start with splitting StocksBalance into SharesBalance and CryptosBalance
