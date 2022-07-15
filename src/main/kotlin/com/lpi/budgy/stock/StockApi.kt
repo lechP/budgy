@@ -3,6 +3,7 @@ package com.lpi.budgy.stock
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.lpi.budgy.Currency
+import com.lpi.budgy.cache.CacheReader
 import com.lpi.budgy.currency.CurrencyConverter
 import org.kodein.di.DI
 import org.kodein.di.conf.global
@@ -24,6 +25,7 @@ class AlphaVantageApi(stocks: Set<String>, cryptos: Set<String>) : StockApi {
     //https://marketstack.com/ - alternative API, which covers WSE
 
     private val currencyConverter: CurrencyConverter by DI.global.instance()
+    private val cacheReader: CacheReader by DI.global.instance()
 
     override fun value(symbol: String, currency: Currency, date: LocalDate): Double {
         val price = valueInDefaultCurrency(symbol, date)
@@ -61,19 +63,22 @@ class AlphaVantageApi(stocks: Set<String>, cryptos: Set<String>) : StockApi {
         }
     }
 
-    private fun jsonAtUrl(url: String): JsonNode {
-        val client = HttpClient.newBuilder().build()
-        val urlWithApiKey = url.replace("API_KEY", "BYQ7WNNFU620A4SX")
-        val request = HttpRequest.newBuilder().uri(URI.create(urlWithApiKey)).build()
-        val json = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
-        if (json.contains("Thank you for using Alpha Vantage"))
-            throw ApiRateException()
+    private fun jsonAtUrl(url: String, cacheKey: String): JsonNode {
+        val json = cacheReader.readOrFetch(cacheKey) {
+            val client = HttpClient.newBuilder().build()
+            val urlWithApiKey = url.replace("API_KEY", "BYQ7WNNFU620A4SX")
+            val request = HttpRequest.newBuilder().uri(URI.create(urlWithApiKey)).build()
+            val json = client.send(request, HttpResponse.BodyHandlers.ofString()).body()
+            if (json.contains("Thank you for using Alpha Vantage"))
+                throw ApiRateException()
+            json
+        }
         return jacksonObjectMapper().readTree(json)
     }
 
     private fun saveDailyQuoteForStock(symbol: String) {
         val url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=$symbol&apikey=API_KEY"
-        val result = jsonAtUrl(url)
+        val result = jsonAtUrl(url, "stock-$symbol-${LocalDate.now()}")
         val timeSeries = result.get("Time Series (Daily)")
         val symbolQuotes: MutableMap<LocalDate, Double> = mutableMapOf()
         for (date in timeSeries.fieldNames()) {
@@ -85,7 +90,7 @@ class AlphaVantageApi(stocks: Set<String>, cryptos: Set<String>) : StockApi {
     private fun saveDailyQuoteForCrypto(symbol: String) {
         val url =
             "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&market=USD&symbol=$symbol&apikey=API_KEY"
-        val result = jsonAtUrl(url)
+        val result = jsonAtUrl(url, "crypto-$symbol-${LocalDate.now()}")
         val timeSeries = result.get("Time Series (Digital Currency Daily)")
         val symbolQuotes: MutableMap<LocalDate, Double> = mutableMapOf()
         for (date in timeSeries.fieldNames()) {
@@ -96,7 +101,7 @@ class AlphaVantageApi(stocks: Set<String>, cryptos: Set<String>) : StockApi {
 
     private fun saveStockCurrency(symbol: String) {
         val url = "https://www.alphavantage.co/query?function=OVERVIEW&symbol=$symbol&apikey=API_KEY"
-        val result = jsonAtUrl(url)
+        val result = jsonAtUrl(url, "overview-$symbol")
         symbolCurrencies[symbol] = result.get("Currency").asText()
     }
 
