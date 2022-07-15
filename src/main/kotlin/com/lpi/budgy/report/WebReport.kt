@@ -12,9 +12,16 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 class WebReport(
-    val book: Book,
-    val snapshots: List<Snapshot>
+    private val book: Book,
+    private val snapshots: List<Snapshot>
 ) {
+
+    private fun snapshotTotals(): Map<String, Double> = snapshots.associate {
+        it.date.toString() to snapshotTotal(it)
+    }
+
+    private fun snapshotTotal(snapshot: Snapshot) =
+        snapshot.balances.sumOf { balance -> balance.toValue(book.mainCurrency, snapshot.date) }
 
     fun display() {
         embeddedServer(Netty, host = "localhost", port = 2207) {
@@ -27,9 +34,16 @@ class WebReport(
 
             routing {
                 get("/") {
-                    call.respond(FreeMarkerContent(
-                        "report.ftl", mapOf("title" to "Budgy")
-                    ))
+                    call.respond(
+                        FreeMarkerContent(
+                            "report.ftl", mapOf(
+                                "title" to "Budgy",
+                                "book" to book,
+                                "snapshots" to snapshots,
+                                "snapshotTotals" to snapshotTotals()
+                            )
+                        )
+                    )
                 }
             }
         }.start(wait = true)
