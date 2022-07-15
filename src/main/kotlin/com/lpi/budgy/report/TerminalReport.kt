@@ -1,4 +1,4 @@
-package com.lpi.budgy
+package com.lpi.budgy.report
 
 import com.github.ajalt.mordant.rendering.BorderStyle
 import com.github.ajalt.mordant.rendering.TextAlign
@@ -8,6 +8,7 @@ import com.github.ajalt.mordant.table.ColumnWidth
 import com.github.ajalt.mordant.table.TableBuilder
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
+import com.lpi.budgy.domain.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

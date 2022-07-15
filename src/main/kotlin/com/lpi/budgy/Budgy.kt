@@ -8,6 +8,11 @@ import com.github.ajalt.clikt.parameters.types.choice
 import com.lpi.budgy.resillience.CacheReader
 import com.lpi.budgy.config.Config
 import com.lpi.budgy.currency.CurrencyConverter
+import com.lpi.budgy.domain.Book
+import com.lpi.budgy.domain.Snapshot
+import com.lpi.budgy.domain.StocksBalance
+import com.lpi.budgy.report.TerminalReport
+import com.lpi.budgy.report.TerminalReportOptions
 import com.lpi.budgy.stock.AlphaVantageApi
 import com.lpi.budgy.stock.StockApi
 import org.kodein.di.DI

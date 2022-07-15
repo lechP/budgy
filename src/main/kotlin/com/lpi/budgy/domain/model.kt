@@ -1,4 +1,4 @@
-package com.lpi.budgy
+package com.lpi.budgy.domain
 
 import com.lpi.budgy.currency.CurrencyConverter
 import com.lpi.budgy.stock.StockApi

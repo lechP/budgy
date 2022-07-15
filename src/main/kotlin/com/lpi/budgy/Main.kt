@@ -1,5 +1,7 @@
 package com.lpi.budgy
 
+import com.lpi.budgy.domain.*
+
 
 fun main(args: Array<String>) {
 

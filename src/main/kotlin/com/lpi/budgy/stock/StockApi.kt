@@ -2,7 +2,7 @@ package com.lpi.budgy.stock
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.lpi.budgy.Currency
+import com.lpi.budgy.domain.Currency
 import com.lpi.budgy.config.Config
 import com.lpi.budgy.resillience.CacheReader
 import com.lpi.budgy.currency.CurrencyConverter
