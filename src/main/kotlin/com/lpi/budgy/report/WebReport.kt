@@ -1,5 +1,6 @@
 package com.lpi.budgy.report
 
+import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.lpi.budgy.domain.Book
 import com.lpi.budgy.domain.Snapshot
 import freemarker.cache.ClassTemplateLoader
@@ -23,6 +24,21 @@ class WebReport(
     private fun snapshotTotal(snapshot: Snapshot) =
         snapshot.balances.sumOf { balance -> balance.toValue(book.mainCurrency, snapshot.date) }
 
+    private fun chartDataByAccount(): List<List<*>> {
+        val accounts = book.institutions.flatMap { book.accountsIn(it) }
+        val headers = listOf("Date") + accounts.map { it.name } + listOf("Total")
+        val rows = snapshots.map { snapshot ->
+            val accountRows = accounts.map {
+                snapshot.accountBalance(it)?.toValue(
+                    book.mainCurrency, snapshot.date
+                )
+            }
+            listOf(snapshot.date.toString() + "T00:00:00") +
+                    accountRows + listOf(snapshotTotal(snapshot))
+        }
+        return listOf(headers) + rows
+    }
+
     fun display() {
         embeddedServer(Netty, host = "localhost", port = 2207) {
             install(FreeMarker) {
@@ -40,7 +56,8 @@ class WebReport(
                                 "title" to "Budgy",
                                 "book" to book,
                                 "snapshots" to snapshots,
-                                "snapshotTotals" to snapshotTotals()
+                                "snapshotTotals" to snapshotTotals(),
+                                "chartDataByAccountJson" to jsonMapper().writeValueAsString(chartDataByAccount())
                             )
                         )
                     )
