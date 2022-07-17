@@ -57,7 +57,7 @@ fun main(args: Array<String>) {
                 checkingAccount.monetaryBalance(500),
                 savingsAccount.monetaryBalance(2000),
                 savingsEurAccount.monetaryBalance(100),
-                sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 100.0, "MSFT" to 20.0)),
+                sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 11.0, "MSFT" to 20.0)),
                 cryptoAccount.cryptosBalance(mapOf("BTC" to 0.1, "ETH" to 1.5)),
                 home.balanceWithLoans(150_000, listOf(140_000)),
                 car.balanceWithLoans(15_000, listOf(7_000))
@@ -67,9 +67,47 @@ fun main(args: Array<String>) {
             balances = setOf(
                 checkingAccount.monetaryBalance(600),
                 savingsAccount.monetaryBalance(2500),
-                sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 100.0, "MSFT" to 30.0)),
+                sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 12.0, "MSFT" to 30.0)),
                 cryptoAccount.cryptosBalance(mapOf("BTC" to 0.12, "ETH" to 1.8)),
                 savingsEurAccount.monetaryBalance(120),
+                home.balanceWithLoans(150_000, listOf(138_500)),
+                car.balanceWithLoans(15_000, listOf(6_000))
+            )
+        ),
+        Snapshot(
+            date = "2022-05-01",
+            balances = setOf(
+                checkingAccount.monetaryBalance(1500),
+                savingsAccount.monetaryBalance(2000),
+                savingsEurAccount.monetaryBalance(100),
+                sharesAccount.stocksBalance(mapOf("TSLA" to 12.0, "AAPL" to 5.0, "MSFT" to 30.0)),
+                cryptoAccount.cryptosBalance(mapOf("BTC" to 0.15, "ETH" to 5.0)),
+                home.balanceWithLoans(150_000, listOf(137_000)),
+                car.balanceWithLoans(15_000, listOf(5_000))
+            )
+        ),
+        Snapshot(
+            date = "2022-06-01",
+            balances = setOf(
+                checkingAccount.monetaryBalance(900),
+                savingsAccount.monetaryBalance(2000),
+                savingsEurAccount.monetaryBalance(200),
+                sharesAccount.stocksBalance(mapOf("TSLA" to 13.0, "AAPL" to 5.0, "MSFT" to 30.0)),
+                cryptoAccount.cryptosBalance(mapOf("BTC" to 0.17, "ETH" to 5.0)),
+                home.balanceWithLoans(150_000, listOf(135_500)),
+                car.balanceWithLoans(15_000, listOf(4_000))
+            )
+        ),
+        Snapshot(
+            date = "2022-07-01",
+            balances = setOf(
+                checkingAccount.monetaryBalance(1100),
+                savingsAccount.monetaryBalance(2000),
+                savingsEurAccount.monetaryBalance(250),
+                sharesAccount.stocksBalance(mapOf("TSLA" to 14.0, "AAPL" to 5.0, "MSFT" to 30.0)),
+                cryptoAccount.cryptosBalance(mapOf("BTC" to 0.18, "ETH" to 5.0)),
+                home.balanceWithLoans(150_000, listOf(134_000)),
+                car.balanceWithLoans(15_000, listOf(3_000))
             )
         )
     )
