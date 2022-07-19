@@ -40,7 +40,7 @@ class WebReport(
     }
 
     fun display() {
-        embeddedServer(Netty, host = "localhost", port = 2207) {
+        embeddedServer(Netty, host = "localhost", port = 2137) {
             install(FreeMarker) {
                 templateLoader = ClassTemplateLoader(
                     this::class.java.classLoader, "templates"

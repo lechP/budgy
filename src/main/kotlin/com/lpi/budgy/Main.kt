@@ -1,15 +1,16 @@
 package com.lpi.budgy
 
 import com.lpi.budgy.domain.*
+import com.lpi.budgy.repository.CurrencyRepository
 
-
+fun Set<Currency>.find(id: String) = first { it.id == id }
 fun main(args: Array<String>) {
 
     // Currencies
-    val usd = Currency("USD", "$")
-    val eur = Currency("EUR", "\u20AC")
-    val pln = Currency("PLN", "zł")
-    val currencies = setOf(usd, eur, pln)
+    val currencies = CurrencyRepository().getAll()
+    val usd = currencies.find("USD")
+    val eur = currencies.find("EUR")
+    val pln = currencies.find("PLN")
 
     // Risk levels
     val cash = RiskLevel("Cash", "\uD83D\uDFE2") // green circle

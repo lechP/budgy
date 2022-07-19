@@ -1,0 +1,14 @@
+[
+  {
+    "id": "USD",
+    "symbol": "$"
+  },
+  {
+    "id": "EUR",
+    "symbol": "\u20AC"
+  },
+  {
+    "id": "PLN",
+    "symbol": "zł"
+  }
+]
