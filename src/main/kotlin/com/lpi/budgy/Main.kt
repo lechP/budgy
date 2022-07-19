@@ -2,8 +2,10 @@ package com.lpi.budgy
 
 import com.lpi.budgy.domain.*
 import com.lpi.budgy.repository.CurrencyRepository
+import com.lpi.budgy.repository.RiskLevelRepository
 
 fun Set<Currency>.find(id: String) = first { it.id == id }
+fun Set<RiskLevel>.find(id: String) = first { it.id == id }
 fun main(args: Array<String>) {
 
     // Currencies
@@ -13,11 +15,11 @@ fun main(args: Array<String>) {
     val pln = currencies.find("PLN")
 
     // Risk levels
-    val cash = RiskLevel("Cash", "\uD83D\uDFE2") // green circle
-    val realEstate = RiskLevel("Real Estate", "\uD83D\uDFE1") // yellow circle
-    val lowRisk = RiskLevel("Low Risk", "\uD83D\uDFE0") // orange circle
-    val highRisk = RiskLevel("High Risk", "\uD83D\uDD34") // red circle
-    val riskLevels = listOf(cash, realEstate, lowRisk, highRisk)
+    val riskLevels = RiskLevelRepository().getAll()
+    val cash = riskLevels.find("cash")
+    val realEstate = riskLevels.find("real_estate")
+    val lowRisk = riskLevels.find("low_risk")
+    val highRisk = riskLevels.find("high_risk")
 
     //Tags
     val downPayment = Tag("Down Payment") // can be used for down payment

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "cash",
+    "name": "Cash",
+    "symbol": "\uD83D\uDFE2"
+  },
+  {
+    "id": "real_estate",
+    "name": "Real Estate",
+    "symbol": "\uD83D\uDFE1"
+  },
+  {
+    "id": "low_risk",
+    "name": "Low Risk",
+    "symbol": "\uD83D\uDFE0"
+  },
+  {
+    "id": "high_risk",
+    "name": "High Risk",
+    "symbol": "\uD83D\uDD34"
+  }
+]
