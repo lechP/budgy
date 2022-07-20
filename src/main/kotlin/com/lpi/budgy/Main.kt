@@ -26,21 +26,22 @@ fun main(args: Array<String>) {
     val property = Tag("Property")
 
     val theBank = Institution("Some Bank")
-    val checkingAccount = Account(theBank, "Checking", pln, AccountMetadata(cash))
-    val savingsAccount = Account(theBank, "Savings", pln, AccountMetadata(lowRisk, setOf(downPayment)))
-    val savingsEurAccount = Account(theBank, "Savings EUR", eur, AccountMetadata(cash))
+    val checkingAccount = Account(theBank, "Checking", pln, AssetMetadata(cash))
+    val savingsAccount = Account(theBank, "Savings", pln, AssetMetadata(lowRisk, setOf(downPayment)))
+    val savingsEurAccount = Account(theBank, "Savings EUR", eur, AssetMetadata(cash))
 
     val stockBroker = Institution("Stock broker")
-    val sharesAccount = Account(stockBroker, "Shares", usd, AccountMetadata(highRisk))
-    val cryptoAccount = Account(stockBroker, "Crypto account", usd, AccountMetadata(highRisk))
+    val sharesAccount = Account(stockBroker, "Shares", usd, AssetMetadata(highRisk))
+    val cryptoAccount = Account(stockBroker, "Crypto account", usd, AssetMetadata(highRisk))
 
     val houses = Institution("Houses")
     val cars = Institution("Cars")
+    // TODO split home and car into Property & Account with negative value
     val home = Account(
         houses,
         "Home",
         pln,
-        AccountMetadata(realEstate, setOf(property))
+        AssetMetadata(realEstate, setOf(property))
     ) // but home belongs to me and loan is provided by separate institution!!
     val car = Account(cars, "Car", pln)
 

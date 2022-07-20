@@ -12,7 +12,7 @@ data class Currency(val id: String, val symbol: String)
 data class RiskLevel(val name: String, val symbol: String, val id: String = name)
 data class Tag(val name: String)
 
-data class AccountMetadata(
+data class AssetMetadata(
     val riskLevel: RiskLevel? = null,
     val tags: Set<Tag> = emptySet()
 )
@@ -32,12 +32,24 @@ data class Book(
 data class Institution(val name: String)
 // I'd group my assets by wallets and keep institutions as some kind of metadata
 
+sealed class Asset {
+    abstract val name: String
+    abstract val currency: Currency
+    abstract val metadata: AssetMetadata
+}
+
+data class Property(
+    override val name: String,
+    override val currency: Currency,
+    override val metadata: AssetMetadata = AssetMetadata()
+): Asset()
+
 data class Account(
     val institution: Institution,
-    val name: String,
-    val currency: Currency,
-    val metadata: AccountMetadata = AccountMetadata()
-) {
+    override val name: String,
+    override val currency: Currency,
+    override val metadata: AssetMetadata = AssetMetadata()
+): Asset() {
     fun monetaryBalance(value: Double) = MonetaryBalance(this, value)
     fun monetaryBalance(value: Int) = MonetaryBalance(this, value.toDouble())
 
