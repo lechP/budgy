@@ -29,7 +29,7 @@ class WebReport(
         val headers = listOf("Date") + accounts.map { it.name } + listOf("Total")
         val rows = snapshots.map { snapshot ->
             val accountRows = accounts.map {
-                snapshot.accountBalance(it)?.toValue(
+                snapshot.assetBalance(it)?.toValue(
                     book.mainCurrency, snapshot.date
                 )
             }

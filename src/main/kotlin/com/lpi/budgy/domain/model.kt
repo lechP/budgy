@@ -19,13 +19,14 @@ data class AssetMetadata(
 
 data class Book(
     val institutions: List<Institution>,
-    val accounts: List<Account>,
+    val assets: List<Asset>,
     val riskLevels: Set<RiskLevel>,
     val tags: List<Tag>,
     val currencies: Set<Currency>,
     val mainCurrency: Currency
 ) {
-    fun accountsIn(institution: Institution): List<Account> = accounts.filter { it.institution == institution }
+    // TODO might break report
+    fun accountsIn(institution: Institution): List<Account> = assets.filterIsInstance<Account>().filter { it.institution == institution }
 }
 
 // I think it's not exactly equivalent of a wallet, rather something more formal
@@ -42,7 +43,9 @@ data class Property(
     override val name: String,
     override val currency: Currency,
     override val metadata: AssetMetadata = AssetMetadata()
-): Asset()
+): Asset() {
+    fun balance(value: Int) = MonetaryBalance(this, value.toDouble())
+}
 
 data class Account(
     val institution: Institution,
@@ -66,16 +69,17 @@ data class Account(
     }
 }
 
-abstract class Balance(open val account: Account) {
+abstract class Balance(open val asset: Asset) {
     abstract fun toValue(currency: Currency, date: LocalDate): Double
 }
 
 // this "open" stuff is to be refactored
-open class MonetaryBalance(override val account: Account, open val value: Double) : Balance(account) {
+// asset isn't really needed, only currency.id
+open class MonetaryBalance(override val asset: Asset, open val value: Double) : Balance(asset) {
     private val currencyConverter: CurrencyConverter by DI.global.instance()
 
     override fun toValue(currency: Currency, date: LocalDate): Double =
-        currencyConverter.convert(value, account.currency.id, currency.id, date)
+        currencyConverter.convert(value, asset.currency.id, currency.id, date)
 
 }
 
@@ -102,6 +106,6 @@ class StocksBalance(
 class Snapshot(val date: LocalDate, val balances: Set<Balance>) {
     constructor(date: String, balances: Set<Balance>) : this(LocalDate.parse(date), balances)
 
-    fun accountBalance(account: Account): Balance? = balances.find { it.account == account }
+    fun assetBalance(asset: Asset): Balance? = balances.find { it.asset == asset }
 
 }

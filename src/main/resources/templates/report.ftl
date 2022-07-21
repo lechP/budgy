@@ -73,8 +73,8 @@
                     <td>${account.name}</td>
                     <#list snapshots as snapshot>
                         <td class="text-right tabular-nums">
-                            <#if (snapshot.accountBalance(account))??>
-                                ${snapshot.accountBalance(account).toValue(book.mainCurrency,snapshot.date)?round}
+                            <#if (snapshot.assetBalance(account))??>
+                                ${snapshot.assetBalance(account).toValue(book.mainCurrency,snapshot.date)?round}
                             <#else>-
                             </#if>
                         </td>

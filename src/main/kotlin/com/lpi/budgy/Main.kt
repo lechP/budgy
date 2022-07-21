@@ -34,20 +34,17 @@ fun main(args: Array<String>) {
     val sharesAccount = Account(stockBroker, "Shares", usd, AssetMetadata(highRisk))
     val cryptoAccount = Account(stockBroker, "Crypto account", usd, AssetMetadata(highRisk))
 
-    val houses = Institution("Houses")
-    val cars = Institution("Cars")
-    // TODO split home and car into Property & Account with negative value
-    val home = Account(
-        houses,
-        "Home",
-        pln,
-        AssetMetadata(realEstate, setOf(property))
-    ) // but home belongs to me and loan is provided by separate institution!!
-    val car = Account(cars, "Car", pln)
+    val creditBank = Institution("Credit Bank")
+    val home = Property("Home", pln, AssetMetadata(realEstate, setOf(property))) // tag makes sense no more
+    val mortgageLoan = Account(creditBank, "Mortgage Loan", pln, AssetMetadata(cash))
+    val car = Property("Car", pln)
+    val carLoan = Account(creditBank, "Car Loan", pln, AssetMetadata(cash))
+
+    // TODO properties disappeared from report, should be presented in separate category
 
     val book = Book(
-        institutions = listOf(theBank, houses, cars, stockBroker),
-        accounts = listOf(checkingAccount, savingsAccount, savingsEurAccount, sharesAccount, cryptoAccount, home, car),
+        institutions = listOf(theBank, creditBank, stockBroker),
+        assets = listOf(checkingAccount, savingsAccount, savingsEurAccount, sharesAccount, cryptoAccount, home, mortgageLoan, car, carLoan),
         riskLevels = riskLevels,
         tags = listOf(downPayment, property),
         currencies = currencies,
@@ -63,8 +60,10 @@ fun main(args: Array<String>) {
                 savingsEurAccount.monetaryBalance(100),
                 sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 11.0, "MSFT" to 20.0)),
                 cryptoAccount.cryptosBalance(mapOf("BTC" to 0.1, "ETH" to 1.5)),
-                home.balanceWithLoans(150_000, listOf(140_000)),
-                car.balanceWithLoans(15_000, listOf(7_000))
+                home.balance(150_000),
+                mortgageLoan.monetaryBalance(-140_000),
+                car.balance(15_000),
+                carLoan.monetaryBalance(-7_000),
             )
         ), Snapshot(
             date = "2022-04-01",
@@ -74,8 +73,10 @@ fun main(args: Array<String>) {
                 sharesAccount.stocksBalance(mapOf("TSLA" to 10.0, "AAPL" to 12.0, "MSFT" to 30.0)),
                 cryptoAccount.cryptosBalance(mapOf("BTC" to 0.12, "ETH" to 1.8)),
                 savingsEurAccount.monetaryBalance(120),
-                home.balanceWithLoans(150_000, listOf(138_500)),
-                car.balanceWithLoans(15_000, listOf(6_000))
+                home.balance(150_000),
+                mortgageLoan.monetaryBalance(-138_500),
+                car.balance(15_000),
+                carLoan.monetaryBalance(-6_000),
             )
         ),
         Snapshot(
@@ -86,8 +87,10 @@ fun main(args: Array<String>) {
                 savingsEurAccount.monetaryBalance(100),
                 sharesAccount.stocksBalance(mapOf("TSLA" to 12.0, "AAPL" to 5.0, "MSFT" to 30.0)),
                 cryptoAccount.cryptosBalance(mapOf("BTC" to 0.15, "ETH" to 5.0)),
-                home.balanceWithLoans(150_000, listOf(137_000)),
-                car.balanceWithLoans(15_000, listOf(5_000))
+                home.balance(150_000),
+                mortgageLoan.monetaryBalance(-137_000),
+                car.balance(15_000),
+                carLoan.monetaryBalance(-5_000),
             )
         ),
         Snapshot(
@@ -98,8 +101,10 @@ fun main(args: Array<String>) {
                 savingsEurAccount.monetaryBalance(200),
                 sharesAccount.stocksBalance(mapOf("TSLA" to 13.0, "AAPL" to 5.0, "MSFT" to 30.0)),
                 cryptoAccount.cryptosBalance(mapOf("BTC" to 0.17, "ETH" to 5.0)),
-                home.balanceWithLoans(150_000, listOf(135_500)),
-                car.balanceWithLoans(15_000, listOf(4_000))
+                home.balance(150_000),
+                mortgageLoan.monetaryBalance(-135_500),
+                car.balance(15_000),
+                carLoan.monetaryBalance(-4_000),
             )
         ),
         Snapshot(
@@ -110,8 +115,10 @@ fun main(args: Array<String>) {
                 savingsEurAccount.monetaryBalance(250),
                 sharesAccount.stocksBalance(mapOf("TSLA" to 14.0, "AAPL" to 5.0, "MSFT" to 30.0)),
                 cryptoAccount.cryptosBalance(mapOf("BTC" to 0.18, "ETH" to 5.0)),
-                home.balanceWithLoans(150_000, listOf(134_000)),
-                car.balanceWithLoans(15_000, listOf(3_000))
+                home.balance(150_000),
+                mortgageLoan.monetaryBalance(-134_000),
+                car.balance(15_000),
+                carLoan.monetaryBalance(-3_000),
             )
         )
     )

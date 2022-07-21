@@ -61,7 +61,7 @@ class TerminalReport(
                         cell(account.metadata.riskLevel?.symbol ?: "")
                         cell(account.label())
                         snapshots.map { snapshot ->
-                            cell(formatBalance(snapshot.accountBalance(account), snapshot.date)) {
+                            cell(formatBalance(snapshot.assetBalance(account), snapshot.date)) {
                                 align = TextAlign.RIGHT
                             }
                         }
@@ -71,15 +71,14 @@ class TerminalReport(
         }
     }
 
-    private fun List<Account>.applyTagFilter() =
-        filter { account -> account.matchesTagFilter() }
+    private fun List<Asset>.applyTagFilter() = filter { it.matchesTagFilter() }
 
-    private fun Account.matchesTagFilter() =
+    private fun Asset.matchesTagFilter() =
         options.filterByTag == null || metadata.tags.contains(options.filterByTag)
 
-    private fun Account.label() = name + tagsIfDisplayable()
+    private fun Asset.label() = name + tagsIfDisplayable()
 
-    private fun Account.tagsIfDisplayable() =
+    private fun Asset.tagsIfDisplayable() =
         TextColors.gray(" (${metadata.tags.joinToString(", ") { it.name }})")
             .takeIf { options.displayTags && metadata.tags.isNotEmpty() } ?: ""
 
@@ -126,11 +125,11 @@ class TerminalReport(
     private fun formatAmount(amount: Double) = String.format("%,.0f", amount)
 
     private fun Snapshot.total() =
-        balances.filter { it.account.matchesTagFilter() }.sumOf { it.toValue(book.mainCurrency, date) }
+        balances.filter { it.asset.matchesTagFilter() }.sumOf { it.toValue(book.mainCurrency, date) }
 
     private fun Snapshot.totalForRiskLevel(riskLevel: RiskLevel) =
         balances.filter {
-            it.account.metadata.riskLevel == riskLevel && it.account.matchesTagFilter()
+            it.asset.metadata.riskLevel == riskLevel && it.asset.matchesTagFilter()
         }.sumOf { it.toValue(book.mainCurrency, date) }
 
     private fun Snapshot.percentageForRiskLevel(riskLevel: RiskLevel) = totalForRiskLevel(riskLevel) / total()
