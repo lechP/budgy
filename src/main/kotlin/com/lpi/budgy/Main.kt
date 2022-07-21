@@ -40,8 +40,6 @@ fun main(args: Array<String>) {
     val car = Property("Car", pln)
     val carLoan = Account(creditBank, "Car Loan", pln, AssetMetadata(cash))
 
-    // TODO properties disappeared from report, should be presented in separate category
-
     val book = Book(
         institutions = listOf(theBank, creditBank, stockBroker),
         assets = listOf(checkingAccount, savingsAccount, savingsEurAccount, sharesAccount, cryptoAccount, home, mortgageLoan, car, carLoan),

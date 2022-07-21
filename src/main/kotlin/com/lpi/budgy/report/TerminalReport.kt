@@ -3,10 +3,7 @@ package com.lpi.budgy.report
 import com.github.ajalt.mordant.rendering.BorderStyle
 import com.github.ajalt.mordant.rendering.TextAlign
 import com.github.ajalt.mordant.rendering.TextColors
-import com.github.ajalt.mordant.table.Borders
-import com.github.ajalt.mordant.table.ColumnWidth
-import com.github.ajalt.mordant.table.TableBuilder
-import com.github.ajalt.mordant.table.table
+import com.github.ajalt.mordant.table.*
 import com.github.ajalt.mordant.terminal.Terminal
 import com.lpi.budgy.domain.*
 import java.time.LocalDate
@@ -28,9 +25,10 @@ class TerminalReport(
 
     private val table = table {
         column(0) { width = ColumnWidth.Fixed(4) }
+        column(1) { width = ColumnWidth.Fixed(book.assets.map { it.label().length }.max() + 2) }
         borderStyle = BorderStyle.SQUARE_DOUBLE_SECTION_SEPARATOR
         headerRow()
-        accountsRows()
+        assetsRows()
         if (options.displayTotalsByRiskLevel) {
             totalByRiskLevel()
         }
@@ -48,23 +46,28 @@ class TerminalReport(
         }
     }
 
-    private fun TableBuilder.accountsRows() {
+    private fun TableBuilder.assetsRows() {
         body {
             book.institutions.filter { book.accountsIn(it).applyTagFilter().isNotEmpty() }.map {
-                row {
-                    style(TextColors.brightYellow, bold = true)
-                    cell(it.name) { columnSpan = 2 + snapshots.size }
-                }
-                book.accountsIn(it).applyTagFilter().map { account ->
-                    row {
-                        borders = Borders.LEFT_RIGHT
-                        cell(account.metadata.riskLevel?.symbol ?: "")
-                        cell(account.label())
-                        snapshots.map { snapshot ->
-                            cell(formatBalance(snapshot.assetBalance(account), snapshot.date)) {
-                                align = TextAlign.RIGHT
-                            }
-                        }
+                assetGroupRows(it.name, book.accountsIn(it))
+            }
+            assetGroupRows("Property", book.properties())
+        }
+    }
+
+    private fun SectionBuilder.assetGroupRows(groupName: String, assets: List<Asset>) {
+        row {
+            style(TextColors.brightYellow, bold = true)
+            cell(groupName) { columnSpan = 2 + snapshots.size }
+        }
+        assets.applyTagFilter().map { account ->
+            row {
+                borders = Borders.LEFT_RIGHT
+                cell(account.metadata.riskLevel?.symbol ?: "")
+                cell(account.label())
+                snapshots.map { snapshot ->
+                    cell(formatBalance(snapshot.assetBalance(account), snapshot.date)) {
+                        align = TextAlign.RIGHT
                     }
                 }
             }
