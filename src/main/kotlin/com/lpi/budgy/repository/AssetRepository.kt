@@ -6,12 +6,11 @@ import com.lpi.budgy.repository.model.AssetEntity
 import com.lpi.budgy.repository.model.AssetMetadataEntity
 import com.lpi.budgy.repository.model.PropertyEntity
 
-class AssetRepository : FileRepository() {
-
-    // TODO Dependency Injection
-    private val currencyRepository = CurrencyRepository()
-    private val institutionRepository = InstitutionRepository()
-    private val riskLevelRepository = RiskLevelRepository()
+class AssetRepository(
+    private val currencyRepository: CurrencyRepository,
+    private val institutionRepository: InstitutionRepository,
+    private val riskLevelRepository: RiskLevelRepository
+) : FileRepository() {
 
     private val data: Set<AssetEntity> by lazy {
         readDataFromJson("assets")

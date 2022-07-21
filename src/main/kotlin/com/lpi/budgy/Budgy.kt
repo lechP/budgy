@@ -14,11 +14,16 @@ import com.lpi.budgy.domain.StocksBalance
 import com.lpi.budgy.report.TerminalReport
 import com.lpi.budgy.report.TerminalReportOptions
 import com.lpi.budgy.report.WebReport
+import com.lpi.budgy.repository.AssetRepository
+import com.lpi.budgy.repository.CurrencyRepository
+import com.lpi.budgy.repository.InstitutionRepository
+import com.lpi.budgy.repository.RiskLevelRepository
 import com.lpi.budgy.stock.AlphaVantageApi
 import com.lpi.budgy.stock.StockApi
 import org.kodein.di.DI
 import org.kodein.di.bindSingleton
 import org.kodein.di.conf.global
+import org.kodein.di.instance
 
 class Budgy(
     private val book: Book,
@@ -39,7 +44,14 @@ class Budgy(
             bindSingleton { CurrencyConverter() }
             bindSingleton<StockApi> { AlphaVantageApi(stocks, cryptos) }
             bindSingleton { CacheReader(".cache") }
+
+            bindSingleton { CurrencyRepository() }
+            bindSingleton { InstitutionRepository() }
+            bindSingleton { RiskLevelRepository() }
+
+            bindSingleton { AssetRepository(instance(), instance(), instance()) }
         }
+
 
         val options = TerminalReportOptions(
             displayTotalsByRiskLevel = displayTotalsByRiskLevel,

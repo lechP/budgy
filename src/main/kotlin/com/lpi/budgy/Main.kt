@@ -10,15 +10,16 @@ fun Set<Currency>.find(id: String) = first { it.id == id }
 fun main(args: Array<String>) {
 
     // Currencies
-    val currencies = CurrencyRepository().getAll()
+    val currencyRepository = CurrencyRepository()
+    val currencies = currencyRepository.getAll()
 
     //Tags
     val downPayment = Tag("Down Payment") // can be used for down payment
     val property = Tag("Property")
 
-    val assetRepository = AssetRepository()
 
     val institutionRepository = InstitutionRepository()
+    val assetRepository = AssetRepository(currencyRepository, institutionRepository, RiskLevelRepository())
     val checkingAccount = assetRepository.find("acc-checking") as Account
     val savingsAccount = assetRepository.find("acc-savings") as Account
     val savingsEurAccount = assetRepository.find("acc-savings-eur") as Account
