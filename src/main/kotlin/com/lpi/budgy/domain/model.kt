@@ -56,11 +56,6 @@ data class Account(
     fun monetaryBalance(value: Double) = MonetaryBalance(this, value)
     fun monetaryBalance(value: Int) = MonetaryBalance(this, value.toDouble())
 
-    fun balanceWithLoans(value: Double, loans: List<Double>) = MonetaryBalanceWithLoans(this, value, loans)
-    fun balanceWithLoans(value: Int, loans: List<Int>) =
-        MonetaryBalanceWithLoans(this, value.toDouble(), loans.map { it.toDouble() })
-    // XD - and what about value as Int and loans as Doubles? It doesn't scale up well
-
     fun stocksBalance(stockAmounts: Map<String, Double>): StocksBalance {
         return StocksBalance(this, stockAmounts, false)
     }
@@ -82,12 +77,6 @@ open class MonetaryBalance(override val asset: Asset, open val value: Double) : 
         currencyConverter.convert(value, asset.currency.id, currency.id, date)
 
 }
-
-// meant for "house with mortgage(s)" but I don't really like it
-// house and mortgage should be two separate accounts, maybe connected on a higher level of abstraction such as
-// Wallet - set of accounts
-class MonetaryBalanceWithLoans(account: Account, value: Double, loans: List<Double>) :
-    MonetaryBalance(account, value - loans.sum())
 
 // hmm... InvestmentBalance? What about investment funds, ETFs etc?
 class StocksBalance(
