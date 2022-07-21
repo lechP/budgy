@@ -19,7 +19,7 @@ data class AssetMetadata(
 
 data class Book(
     val institutions: Set<Institution>,
-    val assets: List<Asset>,
+    val assets: Set<Asset>,
     val riskLevels: Set<RiskLevel>,
     val tags: List<Tag>,
     val currencies: Set<Currency>,

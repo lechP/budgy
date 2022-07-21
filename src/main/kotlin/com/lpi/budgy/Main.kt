@@ -1,56 +1,43 @@
 package com.lpi.budgy
 
 import com.lpi.budgy.domain.*
+import com.lpi.budgy.repository.AssetRepository
 import com.lpi.budgy.repository.CurrencyRepository
 import com.lpi.budgy.repository.InstitutionRepository
 import com.lpi.budgy.repository.RiskLevelRepository
 
 fun Set<Currency>.find(id: String) = first { it.id == id }
-fun Set<RiskLevel>.find(id: String) = first { it.id == id }
 fun main(args: Array<String>) {
 
     // Currencies
     val currencies = CurrencyRepository().getAll()
-    val usd = currencies.find("USD")
-    val eur = currencies.find("EUR")
-    val pln = currencies.find("PLN")
-
-    // Risk levels
-    val riskLevels = RiskLevelRepository().getAll()
-    val cash = riskLevels.find("cash")
-    val realEstate = riskLevels.find("real_estate")
-    val lowRisk = riskLevels.find("low_risk")
-    val highRisk = riskLevels.find("high_risk")
 
     //Tags
     val downPayment = Tag("Down Payment") // can be used for down payment
     val property = Tag("Property")
 
+    val assetRepository = AssetRepository()
 
     val institutionRepository = InstitutionRepository()
-    val institutions = institutionRepository.getAll()
-    val theBank = institutionRepository.find("i-1")
-    val checkingAccount = Account(theBank, "Checking", pln, AssetMetadata(cash))
-    val savingsAccount = Account(theBank, "Savings", pln, AssetMetadata(lowRisk, setOf(downPayment)))
-    val savingsEurAccount = Account(theBank, "Savings EUR", eur, AssetMetadata(cash))
+    val checkingAccount = assetRepository.find("acc-checking") as Account
+    val savingsAccount = assetRepository.find("acc-savings") as Account
+    val savingsEurAccount = assetRepository.find("acc-savings-eur") as Account
 
-    val stockBroker = institutionRepository.find("i-3")
-    val sharesAccount = Account(stockBroker, "Shares", usd, AssetMetadata(highRisk))
-    val cryptoAccount = Account(stockBroker, "Crypto account", usd, AssetMetadata(highRisk))
+    val sharesAccount = assetRepository.find("acc-shares") as Account
+    val cryptoAccount = assetRepository.find("acc-cryptos") as Account
 
-    val creditBank = institutionRepository.find("i-2")
-    val home = Property("Home", pln, AssetMetadata(realEstate, setOf(property))) // tag makes sense no more
-    val mortgageLoan = Account(creditBank, "Mortgage Loan", pln, AssetMetadata(cash))
-    val car = Property("Car", pln)
-    val carLoan = Account(creditBank, "Car Loan", pln, AssetMetadata(cash))
+    val home = assetRepository.find("prop-house") as Property
+    val mortgageLoan = assetRepository.find("acc-mortgage") as Account
+    val car = assetRepository.find("prop-car") as Property
+    val carLoan = assetRepository.find("acc-car-loan") as Account
 
     val book = Book(
-        institutions = institutions,
-        assets = listOf(checkingAccount, savingsAccount, savingsEurAccount, sharesAccount, cryptoAccount, home, mortgageLoan, car, carLoan),
-        riskLevels = riskLevels,
+        institutions = institutionRepository.getAll(),
+        assets = assetRepository.getAll(),
+        riskLevels = RiskLevelRepository().getAll(),
         tags = listOf(downPayment, property),
         currencies = currencies,
-        mainCurrency = pln
+        mainCurrency = currencies.find("PLN")
     )
 
     val snapshots = listOf(

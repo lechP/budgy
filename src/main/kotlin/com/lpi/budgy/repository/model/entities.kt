@@ -2,9 +2,6 @@ package com.lpi.budgy.repository.model
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
-import com.lpi.budgy.domain.AssetMetadata
-import com.lpi.budgy.domain.RiskLevel
-import com.lpi.budgy.domain.Tag
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes(
