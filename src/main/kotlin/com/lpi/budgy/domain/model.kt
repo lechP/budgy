@@ -9,7 +9,7 @@ import java.time.LocalDate
 
 data class Currency(val id: String, val symbol: String)
 
-data class RiskLevel(val name: String, val symbol: String, val id: String = name)
+data class RiskLevel(val name: String, val symbol: String, val id: String)
 data class Tag(val name: String)
 
 data class AssetMetadata(
@@ -18,7 +18,7 @@ data class AssetMetadata(
 )
 
 data class Book(
-    val institutions: List<Institution>,
+    val institutions: Set<Institution>,
     val assets: List<Asset>,
     val riskLevels: Set<RiskLevel>,
     val tags: List<Tag>,
@@ -29,7 +29,10 @@ data class Book(
     fun properties(): List<Property> = assets.filterIsInstance<Property>()
 }
 
-data class Institution(val name: String)
+data class Institution(
+    val id: String,
+    val name: String
+    )
 // I'd group my assets by wallets and keep institutions as some kind of metadata
 
 sealed class Asset {

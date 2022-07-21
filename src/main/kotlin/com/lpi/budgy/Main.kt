@@ -2,6 +2,7 @@ package com.lpi.budgy
 
 import com.lpi.budgy.domain.*
 import com.lpi.budgy.repository.CurrencyRepository
+import com.lpi.budgy.repository.InstitutionRepository
 import com.lpi.budgy.repository.RiskLevelRepository
 
 fun Set<Currency>.find(id: String) = first { it.id == id }
@@ -25,23 +26,25 @@ fun main(args: Array<String>) {
     val downPayment = Tag("Down Payment") // can be used for down payment
     val property = Tag("Property")
 
-    val theBank = Institution("Some Bank")
+    val institutionRepository = InstitutionRepository()
+    val institutions = institutionRepository.getAll()
+    val theBank = institutionRepository.find("i-1")
     val checkingAccount = Account(theBank, "Checking", pln, AssetMetadata(cash))
     val savingsAccount = Account(theBank, "Savings", pln, AssetMetadata(lowRisk, setOf(downPayment)))
     val savingsEurAccount = Account(theBank, "Savings EUR", eur, AssetMetadata(cash))
 
-    val stockBroker = Institution("Stock broker")
+    val stockBroker = institutionRepository.find("i-3")
     val sharesAccount = Account(stockBroker, "Shares", usd, AssetMetadata(highRisk))
     val cryptoAccount = Account(stockBroker, "Crypto account", usd, AssetMetadata(highRisk))
 
-    val creditBank = Institution("Credit Bank")
+    val creditBank = institutionRepository.find("i-2")
     val home = Property("Home", pln, AssetMetadata(realEstate, setOf(property))) // tag makes sense no more
     val mortgageLoan = Account(creditBank, "Mortgage Loan", pln, AssetMetadata(cash))
     val car = Property("Car", pln)
     val carLoan = Account(creditBank, "Car Loan", pln, AssetMetadata(cash))
 
     val book = Book(
-        institutions = listOf(theBank, creditBank, stockBroker),
+        institutions = institutions,
         assets = listOf(checkingAccount, savingsAccount, savingsEurAccount, sharesAccount, cryptoAccount, home, mortgageLoan, car, carLoan),
         riskLevels = riskLevels,
         tags = listOf(downPayment, property),
