@@ -82,6 +82,27 @@
                 </tr>
             </#list>
         </#list>
+        <tr class="border-y font-bold">
+            <td colspan="${snapshots?size + 2}" class="pt-4">Properties</td>
+        </tr>
+        <#list book.properties() as property>
+            <tr>
+                <td class="w-6 text-center">
+                    <#if (property.metadata.riskLevel)??>${property.metadata.riskLevel.symbol}<#else> </#if>
+                </td>
+                <td>${property.name}</td>
+                <#list snapshots as snapshot>
+                    <td class="text-right tabular-nums">
+                        <#if (snapshot.assetBalance(property))??>
+                            ${snapshot.assetBalance(property).toValue(book.mainCurrency,snapshot.date)?round}
+                        <#else>-
+                        </#if>
+                    </td>
+                </#list>
+            </tr>
+        </#list>
+
+
         </tbody>
         <tfoot>
         <!-- This row is here for styling concerns only -->

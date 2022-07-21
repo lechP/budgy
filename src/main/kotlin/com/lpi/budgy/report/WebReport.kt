@@ -24,17 +24,16 @@ class WebReport(
     private fun snapshotTotal(snapshot: Snapshot) =
         snapshot.balances.sumOf { balance -> balance.toValue(book.mainCurrency, snapshot.date) }
 
-    private fun chartDataByAccount(): List<List<*>> {
-        val accounts = book.institutions.flatMap { book.accountsIn(it) }
-        val headers = listOf("Date") + accounts.map { it.name } + listOf("Total")
+    private fun chartDataByAsset(): List<List<*>> {
+        val headers = listOf("Date") + book.assets.map { it.name } + listOf("Total")
         val rows = snapshots.map { snapshot ->
-            val accountRows = accounts.map {
+            val assetRows = book.assets.map {
                 snapshot.assetBalance(it)?.toValue(
                     book.mainCurrency, snapshot.date
                 )
             }
             listOf(snapshot.date.toString() + "T00:00:00") +
-                    accountRows + listOf(snapshotTotal(snapshot))
+                    assetRows + listOf(snapshotTotal(snapshot))
         }
         return listOf(headers) + rows
     }
@@ -57,7 +56,7 @@ class WebReport(
                                 "book" to book,
                                 "snapshots" to snapshots,
                                 "snapshotTotals" to snapshotTotals(),
-                                "chartDataByAccountJson" to jsonMapper().writeValueAsString(chartDataByAccount())
+                                "chartDataByAccountJson" to jsonMapper().writeValueAsString(chartDataByAsset())
                             )
                         )
                     )

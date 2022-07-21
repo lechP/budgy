@@ -25,11 +25,10 @@ data class Book(
     val currencies: Set<Currency>,
     val mainCurrency: Currency
 ) {
-    // TODO might break report
     fun accountsIn(institution: Institution): List<Account> = assets.filterIsInstance<Account>().filter { it.institution == institution }
+    fun properties(): List<Property> = assets.filterIsInstance<Property>()
 }
 
-// I think it's not exactly equivalent of a wallet, rather something more formal
 data class Institution(val name: String)
 // I'd group my assets by wallets and keep institutions as some kind of metadata
 
