@@ -14,7 +14,7 @@ class AssetRepository : FileRepository() {
     private val riskLevelRepository = RiskLevelRepository()
 
     private val data: Set<AssetEntity> by lazy {
-        readDataFromJson("currencies")
+        readDataFromJson("assets")
     }
 
     fun find(id: String) = data.find { it.id == id }?.toDomain() ?: throw AssetNotFound(id)
