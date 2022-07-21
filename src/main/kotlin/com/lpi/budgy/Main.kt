@@ -6,12 +6,10 @@ import com.lpi.budgy.repository.CurrencyRepository
 import com.lpi.budgy.repository.InstitutionRepository
 import com.lpi.budgy.repository.RiskLevelRepository
 
-fun Set<Currency>.find(id: String) = first { it.id == id }
 fun main(args: Array<String>) {
 
     // Currencies
     val currencyRepository = CurrencyRepository()
-    val currencies = currencyRepository.getAll()
 
     //Tags
     val downPayment = Tag("Down Payment") // can be used for down payment
@@ -37,8 +35,8 @@ fun main(args: Array<String>) {
         assets = assetRepository.getAll(),
         riskLevels = RiskLevelRepository().getAll(),
         tags = listOf(downPayment, property),
-        currencies = currencies,
-        mainCurrency = currencies.find("PLN")
+        currencies = currencyRepository.getAll(),
+        mainCurrency = currencyRepository.find("PLN")
     )
 
     val snapshots = listOf(
