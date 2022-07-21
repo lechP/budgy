@@ -36,6 +36,7 @@ data class Institution(
 // I'd group my assets by wallets and keep institutions as some kind of metadata
 
 sealed class Asset {
+    abstract val id: String
     abstract val name: String
     abstract val currency: Currency
     abstract val metadata: AssetMetadata
@@ -44,7 +45,8 @@ sealed class Asset {
 data class Property(
     override val name: String,
     override val currency: Currency,
-    override val metadata: AssetMetadata = AssetMetadata()
+    override val metadata: AssetMetadata = AssetMetadata(),
+    override val id: String = name,
 ): Asset() {
     fun balance(value: Int) = MonetaryBalance(this, value.toDouble())
 }
@@ -53,7 +55,8 @@ data class Account(
     val institution: Institution,
     override val name: String,
     override val currency: Currency,
-    override val metadata: AssetMetadata = AssetMetadata()
+    override val metadata: AssetMetadata = AssetMetadata(),
+    override val id: String = name,
 ): Asset() {
     fun monetaryBalance(value: Double) = MonetaryBalance(this, value)
     fun monetaryBalance(value: Int) = MonetaryBalance(this, value.toDouble())

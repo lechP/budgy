@@ -26,6 +26,7 @@ fun main(args: Array<String>) {
     val downPayment = Tag("Down Payment") // can be used for down payment
     val property = Tag("Property")
 
+
     val institutionRepository = InstitutionRepository()
     val institutions = institutionRepository.getAll()
     val theBank = institutionRepository.find("i-1")

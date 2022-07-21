@@ -1,0 +1,101 @@
+[
+  {
+    "type": "AccountEntity",
+    "id": "acc-checking",
+    "institutionId": "i-1",
+    "name": "Checking",
+    "currencyId": "PLN",
+    "metadata": {
+      "riskLevelId": "cash",
+      "tags": []
+    }
+  },
+  {
+    "type": "AccountEntity",
+    "institutionId": "i-1",
+    "id": "acc-savings",
+    "name": "Savings",
+    "currencyId": "PLN",
+    "metadata": {
+      "riskLevelId": "low_risk",
+      "tags": [
+        "Down Payment"
+      ]
+    }
+  },
+  {
+    "type": "AccountEntity",
+    "institutionId": "i-1",
+    "id": "acc-savings-eur",
+    "name": "Savings EUR",
+    "currencyId": "EUR",
+    "metadata": {
+      "riskLevelId": "low_risk",
+      "tags": []
+    }
+  },
+  {
+    "type": "AccountEntity",
+    "institutionId": "i-3",
+    "id": "acc-shares",
+    "name": "Shares",
+    "currencyId": "USD",
+    "metadata": {
+      "riskLevelId": "high_risk",
+      "tags": []
+    }
+  },
+  {
+    "type": "AccountEntity",
+    "institutionId": "i-3",
+    "id": "acc-cryptos",
+    "name": "Crypto Account",
+    "currencyId": "USD",
+    "metadata": {
+      "riskLevelId": "high_risk",
+      "tags": []
+    }
+  },
+  {
+    "type": "AccountEntity",
+    "institutionId": "i-2",
+    "id": "acc-mortgage",
+    "name": "Mortgage Loan",
+    "currencyId": "PLN",
+    "metadata": {
+      "riskLevelId": "cash",
+      "tags": []
+    }
+  },
+  {
+    "type": "AccountEntity",
+    "institutionId": "i-2",
+    "id": "acc-car-loan",
+    "name": "Car Loan",
+    "currencyId": "PLN",
+    "metadata": {
+      "riskLevelId": "cash",
+      "tags": []
+    }
+  },
+  {
+    "type": "PropertyEntity",
+    "id": "prop-house",
+    "name": "House",
+    "currencyId": "PLN",
+    "metadata": {
+      "riskLevelId": "real_estate",
+      "tags": []
+    }
+  },
+  {
+    "type": "PropertyEntity",
+    "id": "prop-car",
+    "name": "Car",
+    "currencyId": "PLN",
+    "metadata": {
+      "riskLevelId": null,
+      "tags": []
+    }
+  }
+]
