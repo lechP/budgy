@@ -69,13 +69,13 @@ data class Account(
     }
 }
 
-abstract class Balance(open val asset: Asset) {
+sealed class Balance(open val asset: Asset) {
     abstract fun toValue(currency: Currency, date: LocalDate): Double
 }
 
 // this "open" stuff is to be refactored
 // asset isn't really needed, only currency.id
-open class MonetaryBalance(override val asset: Asset, open val value: Double) : Balance(asset) {
+data class MonetaryBalance(override val asset: Asset, val value: Double) : Balance(asset) {
     private val currencyConverter: CurrencyConverter by DI.global.instance()
 
     override fun toValue(currency: Currency, date: LocalDate): Double =
@@ -87,11 +87,13 @@ open class MonetaryBalance(override val asset: Asset, open val value: Double) : 
 // TODO split into SharesBalance, CryptoBalance and maybe InvestmentBalance
 // but consider a case when you have stocks and cryptos within single balance (revolut for example)
 // stocksAmounts should be modelled with more details
-class StocksBalance(
-    account: Account,
+
+// another thing is that if this is some kind of DTO it should not depend on some service like stockApi
+data class StocksBalance(
+    override val asset: Asset,
     val stocksAmounts: Map<String, Double>,
     val isCrypto: Boolean // OMG
-) : Balance(account) {
+) : Balance(asset) {
     private val stockApi: StockApi by DI.global.instance()
 
     override fun toValue(currency: Currency, date: LocalDate): Double =
