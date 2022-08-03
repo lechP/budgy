@@ -39,9 +39,17 @@ fun main(args: Array<String>) {
         mainCurrency = currencyRepository.find("PLN")
     )
 
+    /* TODO
+    1. move snapshots to JSON, maybe with unit tests?
+    2. add methods to snapshot repository for getting all stock and crypto symbols
+    3. use SnapshotRepo in AlphaVantageApi
+    4. upgrade dependency injection reduce main to Budgy(book).main(args)
+     */
+
+
     val snapshots = listOf(
         Snapshot(
-            date = "2022-03-01",
+            date = "2022-04-01",
             balances = setOf(
                 checkingAccount.monetaryBalance(500),
                 savingsAccount.monetaryBalance(2000),
@@ -54,7 +62,7 @@ fun main(args: Array<String>) {
                 carLoan.monetaryBalance(-7_000),
             )
         ), Snapshot(
-            date = "2022-04-01",
+            date = "2022-05-01",
             balances = setOf(
                 checkingAccount.monetaryBalance(600),
                 savingsAccount.monetaryBalance(2500),
@@ -68,7 +76,7 @@ fun main(args: Array<String>) {
             )
         ),
         Snapshot(
-            date = "2022-05-01",
+            date = "2022-06-01",
             balances = setOf(
                 checkingAccount.monetaryBalance(1500),
                 savingsAccount.monetaryBalance(2000),
@@ -82,7 +90,7 @@ fun main(args: Array<String>) {
             )
         ),
         Snapshot(
-            date = "2022-06-01",
+            date = "2022-07-01",
             balances = setOf(
                 checkingAccount.monetaryBalance(900),
                 savingsAccount.monetaryBalance(2000),
@@ -96,7 +104,7 @@ fun main(args: Array<String>) {
             )
         ),
         Snapshot(
-            date = "2022-07-01",
+            date = "2022-08-01",
             balances = setOf(
                 checkingAccount.monetaryBalance(1100),
                 savingsAccount.monetaryBalance(2000),

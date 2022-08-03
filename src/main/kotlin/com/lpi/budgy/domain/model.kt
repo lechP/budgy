@@ -84,6 +84,9 @@ open class MonetaryBalance(override val asset: Asset, open val value: Double) : 
 }
 
 // hmm... InvestmentBalance? What about investment funds, ETFs etc?
+// TODO split into SharesBalance, CryptoBalance and maybe InvestmentBalance
+// but consider a case when you have stocks and cryptos within single balance (revolut for example)
+// stocksAmounts should be modelled with more details
 class StocksBalance(
     account: Account,
     val stocksAmounts: Map<String, Double>,
