@@ -5,7 +5,7 @@ import com.lpi.budgy.domain.CurrencyNotFound
 
 class CurrencyRepository: FileRepository() {
 
-    private val data: Set<Currency> by lazy {
+    private val data: List<Currency> by lazy {
         readDataFromJson("currencies")
     }
 

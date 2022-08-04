@@ -35,6 +35,7 @@
         "type": "StocksBalanceEntity",
         "id": "1-5",
         "assetId": "acc-cryptos",
+        "isCrypto": true,
         "stocksAmounts": {
           "BTC": 0.1,
           "ETH": 1.5
@@ -63,6 +64,278 @@
         "id": "1-9",
         "assetId": "acc-car-loan",
         "value": -7000
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "date": "2022-05-01",
+    "balances": [
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "2-1",
+        "assetId": "acc-checking",
+        "value": 600
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "2-2",
+        "assetId": "acc-savings",
+        "value": 2500
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "2-3",
+        "assetId": "acc-savings-eur",
+        "value": 120
+      },
+      {
+        "type": "StocksBalanceEntity",
+        "id": "2-4",
+        "assetId": "acc-shares",
+        "stocksAmounts": {
+          "TSLA": 10.0,
+          "AAPL": 12.0,
+          "MSFT": 30.0
+        }
+      },
+      {
+        "type": "StocksBalanceEntity",
+        "id": "2-5",
+        "assetId": "acc-cryptos",
+        "isCrypto": true,
+        "stocksAmounts": {
+          "BTC": 0.12,
+          "ETH": 1.8
+        }
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "2-6",
+        "assetId": "prop-house",
+        "value": 150000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "2-7",
+        "assetId": "acc-mortgage",
+        "value": -138500
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "2-8",
+        "assetId": "prop-car",
+        "value": 15000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "2-9",
+        "assetId": "acc-car-loan",
+        "value": -6000
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "date": "2022-06-01",
+    "balances": [
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "3-1",
+        "assetId": "acc-checking",
+        "value": 1500
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "3-2",
+        "assetId": "acc-savings",
+        "value": 2000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "3-3",
+        "assetId": "acc-savings-eur",
+        "value": 100
+      },
+      {
+        "type": "StocksBalanceEntity",
+        "id": "3-4",
+        "assetId": "acc-shares",
+        "stocksAmounts": {
+          "TSLA": 12.0,
+          "AAPL": 5.0,
+          "MSFT": 30.0
+        }
+      },
+      {
+        "type": "StocksBalanceEntity",
+        "id": "3-5",
+        "assetId": "acc-cryptos",
+        "isCrypto": true,
+        "stocksAmounts": {
+          "BTC": 0.15,
+          "ETH": 5.0
+        }
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "3-6",
+        "assetId": "prop-house",
+        "value": 150000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "3-7",
+        "assetId": "acc-mortgage",
+        "value": -137000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "3-8",
+        "assetId": "prop-car",
+        "value": 15000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "3-9",
+        "assetId": "acc-car-loan",
+        "value": -5000
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "date": "2022-07-01",
+    "balances": [
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "4-1",
+        "assetId": "acc-checking",
+        "value": 900
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "4-2",
+        "assetId": "acc-savings",
+        "value": 2000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "4-3",
+        "assetId": "acc-savings-eur",
+        "value": 200
+      },
+      {
+        "type": "StocksBalanceEntity",
+        "id": "4-4",
+        "assetId": "acc-shares",
+        "stocksAmounts": {
+          "TSLA": 13.0,
+          "AAPL": 5.0,
+          "MSFT": 30.0
+        }
+      },
+      {
+        "type": "StocksBalanceEntity",
+        "id": "4-5",
+        "assetId": "acc-cryptos",
+        "isCrypto": true,
+        "stocksAmounts": {
+          "BTC": 0.17,
+          "ETH": 5.0
+        }
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "4-6",
+        "assetId": "prop-house",
+        "value": 150000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "4-7",
+        "assetId": "acc-mortgage",
+        "value": -135500
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "4-8",
+        "assetId": "prop-car",
+        "value": 15000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "4-9",
+        "assetId": "acc-car-loan",
+        "value": -4000
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "date": "2022-08-01",
+    "balances": [
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "5-1",
+        "assetId": "acc-checking",
+        "value": 1100
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "5-2",
+        "assetId": "acc-savings",
+        "value": 2000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "5-3",
+        "assetId": "acc-savings-eur",
+        "value": 250
+      },
+      {
+        "type": "StocksBalanceEntity",
+        "id": "5-4",
+        "assetId": "acc-shares",
+        "stocksAmounts": {
+          "TSLA": 14.0,
+          "AAPL": 5.0,
+          "MSFT": 30.0
+        }
+      },
+      {
+        "type": "StocksBalanceEntity",
+        "id": "5-5",
+        "assetId": "acc-cryptos",
+        "isCrypto": true,
+        "stocksAmounts": {
+          "BTC": 0.18,
+          "ETH": 5.0
+        }
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "5-6",
+        "assetId": "prop-house",
+        "value": 150000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "5-7",
+        "assetId": "acc-mortgage",
+        "value": -134000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "5-8",
+        "assetId": "prop-car",
+        "value": 15000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "5-9",
+        "assetId": "acc-car-loan",
+        "value": -3000
       }
     ]
   }

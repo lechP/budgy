@@ -5,7 +5,7 @@ import com.lpi.budgy.domain.RiskLevelNotFound
 
 class RiskLevelRepository: FileRepository() {
 
-    private val data: Set<RiskLevel> by lazy {
+    private val data: List<RiskLevel> by lazy {
         readDataFromJson("riskLevels")
     }
 

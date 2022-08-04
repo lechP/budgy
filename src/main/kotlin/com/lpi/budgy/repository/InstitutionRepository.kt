@@ -5,7 +5,7 @@ import com.lpi.budgy.domain.InstitutionNotFound
 
 class InstitutionRepository: FileRepository() {
 
-    private val data: Set<Institution> by lazy {
+    private val data: List<Institution> by lazy {
         readDataFromJson("institutions")
     }
 

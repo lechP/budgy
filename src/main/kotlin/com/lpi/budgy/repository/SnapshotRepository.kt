@@ -7,13 +7,13 @@ class SnapshotRepository(
     private val assetRepository: AssetRepository,
 ) : FileRepository() {
 
-    private val data: Set<SnapshotEntity> by lazy {
+    private val data: List<SnapshotEntity> by lazy {
         readDataFromJson("snapshots")
     }
 
     fun find(id: String) = data.find { it.id == id }?.toDomain() ?: throw SnapshotNotFound(id)
 
-    fun getAll(): Set<Snapshot> = data.map { it.toDomain() }.toSet()
+    fun getAll(): List<Snapshot> = data.map { it.toDomain() }.sortedBy { it.date }
 
     private fun SnapshotEntity.toDomain(): Snapshot =
         Snapshot(
@@ -37,6 +37,7 @@ class SnapshotRepository(
 
 
 fun main() {
+    // TODO replace with integration tests of repos
     val assetRepository = AssetRepository(CurrencyRepository(), InstitutionRepository(), RiskLevelRepository())
     val repo = SnapshotRepository(assetRepository)
 

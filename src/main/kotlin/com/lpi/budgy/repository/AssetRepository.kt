@@ -12,7 +12,7 @@ class AssetRepository(
     private val riskLevelRepository: RiskLevelRepository
 ) : FileRepository() {
 
-    private val data: Set<AssetEntity> by lazy {
+    private val data: List<AssetEntity> by lazy {
         readDataFromJson("assets")
     }
 
