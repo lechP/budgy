@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes(
     JsonSubTypes.Type(value = MonetaryBalanceEntity::class),
-    JsonSubTypes.Type(value = StockBalanceEntity::class),
+    JsonSubTypes.Type(value = StocksBalanceEntity::class),
 )
 sealed class BalanceEntity {
     abstract val id: String
@@ -19,7 +19,7 @@ data class MonetaryBalanceEntity(
     val value: Double,
 ): BalanceEntity()
 
-data class StockBalanceEntity(
+data class StocksBalanceEntity(
     override val id: String,
     override val assetId: String,
     val stocksAmounts: Map<String, Double>,

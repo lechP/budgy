@@ -102,7 +102,7 @@ data class StocksBalance(
 }
 
 
-class Snapshot(val date: LocalDate, val balances: Set<Balance>) {
+data class Snapshot(val date: LocalDate, val balances: Set<Balance>) {
     constructor(date: String, balances: Set<Balance>) : this(LocalDate.parse(date), balances)
 
     fun assetBalance(asset: Asset): Balance? = balances.find { it.asset == asset }

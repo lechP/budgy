@@ -16,6 +16,7 @@ dependencies {
     implementation 'com.github.ajalt.mordant:mordant:2.0.0-beta4'
     implementation 'com.github.ajalt.clikt:clikt:3.5.0'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'
     implementation 'org.kodein.di:kodein-di:7.14.0'
     implementation 'org.kodein.di:kodein-di-conf-jvm:7.12.0'
 

@@ -1,9 +1,68 @@
 [
   {
+    "id": "1",
     "date": "2022-04-01",
     "balances": [
       {
-        ""
+        "type": "MonetaryBalanceEntity",
+        "id": "1-1",
+        "assetId": "acc-checking",
+        "value": 500
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "1-2",
+        "assetId": "acc-savings",
+        "value": 2000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "1-3",
+        "assetId": "acc-savings-eur",
+        "value": 100
+      },
+      {
+        "type": "StocksBalanceEntity",
+        "id": "1-4",
+        "assetId": "acc-shares",
+        "stocksAmounts": {
+          "TSLA": 10.0,
+          "AAPL": 11.0,
+          "MSFT": 20.0
+        }
+      },
+      {
+        "type": "StocksBalanceEntity",
+        "id": "1-5",
+        "assetId": "acc-cryptos",
+        "stocksAmounts": {
+          "BTC": 0.1,
+          "ETH": 1.5
+        }
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "1-6",
+        "assetId": "prop-house",
+        "value": 150000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "1-7",
+        "assetId": "acc-mortgage",
+        "value": -140000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "1-8",
+        "assetId": "prop-car",
+        "value": 15000
+      },
+      {
+        "type": "MonetaryBalanceEntity",
+        "id": "1-9",
+        "assetId": "acc-car-loan",
+        "value": -7000
       }
     ]
   }
