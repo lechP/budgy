@@ -6,12 +6,8 @@ import com.lpi.budgy.domain.Currency
 import com.lpi.budgy.config.Config
 import com.lpi.budgy.resillience.CacheReader
 import com.lpi.budgy.currency.CurrencyConverter
-import com.lpi.budgy.repository.AssetRepository
 import com.lpi.budgy.repository.SnapshotRepository
 import com.lpi.budgy.resillience.RetrySystem
-import org.kodein.di.DI
-import org.kodein.di.conf.global
-import org.kodein.di.instance
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -23,15 +19,14 @@ interface StockApi {
 }
 
 class AlphaVantageApi(
-    snapshotRepository: SnapshotRepository
+    config: Config,
+    snapshotRepository: SnapshotRepository,
+    private val currencyConverter: CurrencyConverter,
+    private val cacheReader: CacheReader
 ) : StockApi {
 
     //https://marketstack.com/ - alternative API, which covers WSE
 
-    private val config: Config by DI.global.instance()
-
-    private val currencyConverter: CurrencyConverter by DI.global.instance()
-    private val cacheReader: CacheReader by DI.global.instance()
     private val retrySystem = RetrySystem(config.alphaVantageApiKeys)
 
     override fun value(symbol: String, currency: Currency, date: LocalDate): Double {

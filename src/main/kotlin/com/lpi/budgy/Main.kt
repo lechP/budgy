@@ -27,8 +27,9 @@ fun main(args: Array<String>) {
     )
 
     /* TODO
-    5. remove stockApi from StocksBalance - use some service instead
-    6. get rid of DI.global.instance
+    5a. remove stockApi from StocksBalance - use some service instead
+    5b. remove currencyConverter from MonetaryBalance - use some service instead
+    7. use KTOR client instead of plain java.net
      */
 
     Budgy(book).main(args)

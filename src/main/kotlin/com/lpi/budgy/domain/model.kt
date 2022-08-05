@@ -70,10 +70,10 @@ data class Account(
 }
 
 sealed class Balance(open val asset: Asset) {
+    //always called with book.mainCurrency and snapshot.date
     abstract fun toValue(currency: Currency, date: LocalDate): Double
 }
 
-// this "open" stuff is to be refactored
 // asset isn't really needed, only currency.id
 data class MonetaryBalance(override val asset: Asset, val value: Double) : Balance(asset) {
     private val currencyConverter: CurrencyConverter by DI.global.instance()
@@ -102,8 +102,6 @@ data class StocksBalance(
 
 
 data class Snapshot(val date: LocalDate, val balances: Set<Balance>) {
-    constructor(date: String, balances: Set<Balance>) : this(LocalDate.parse(date), balances)
-
     fun assetBalance(asset: Asset): Balance? = balances.find { it.asset == asset }
 
 }

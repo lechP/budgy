@@ -9,7 +9,6 @@ import com.lpi.budgy.resillience.CacheReader
 import com.lpi.budgy.config.Config
 import com.lpi.budgy.currency.CurrencyConverter
 import com.lpi.budgy.domain.Book
-import com.lpi.budgy.domain.Snapshot
 import com.lpi.budgy.report.TerminalReport
 import com.lpi.budgy.report.TerminalReportOptions
 import com.lpi.budgy.report.WebReport
@@ -41,7 +40,7 @@ class Budgy(
 
         DI.global.addConfig {
             bindSingleton { Config() }
-            bindSingleton { CurrencyConverter() }
+            bindSingleton { CurrencyConverter(instance()) }
             bindSingleton { CacheReader(".cache") }
 
             bindSingleton { CurrencyRepository() }
@@ -50,7 +49,7 @@ class Budgy(
 
             bindSingleton { AssetRepository(instance(), instance(), instance()) }
             bindSingleton { SnapshotRepository(instance()) }
-            bindSingleton<StockApi> { AlphaVantageApi(instance()) }
+            bindSingleton<StockApi> { AlphaVantageApi(instance(), instance(), instance(), instance()) }
 
             bindSingleton { WebReport(book, instance()) }
             bindSingleton { TerminalReport(book, instance(), options) }
