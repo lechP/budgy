@@ -27,9 +27,9 @@ fun main(args: Array<String>) {
     )
 
     /* TODO
-    2. add methods to snapshot repository for getting all stock and crypto symbols
-    3. use SnapshotRepo in AlphaVantageApi
     4. upgrade dependency injection reduce main to Budgy(book).main(args)
+    5. remove stockApi from StocksBalance - use some service instead
+    6. get rid of DI.global.instance
      */
 
     val snapshotRepository = SnapshotRepository(assetRepository)

@@ -6,6 +6,8 @@ import com.lpi.budgy.domain.Currency
 import com.lpi.budgy.config.Config
 import com.lpi.budgy.resillience.CacheReader
 import com.lpi.budgy.currency.CurrencyConverter
+import com.lpi.budgy.repository.AssetRepository
+import com.lpi.budgy.repository.SnapshotRepository
 import com.lpi.budgy.resillience.RetrySystem
 import org.kodein.di.DI
 import org.kodein.di.conf.global
@@ -20,9 +22,9 @@ interface StockApi {
     fun value(symbol: String, currency: Currency, date: LocalDate): Double
 }
 
-// stock is any kind of asset not only shares - so name is suitable
-
-class AlphaVantageApi(stocks: Set<String>, cryptos: Set<String>) : StockApi {
+class AlphaVantageApi(
+    snapshotRepository: SnapshotRepository
+) : StockApi {
 
     //https://marketstack.com/ - alternative API, which covers WSE
 
@@ -43,11 +45,11 @@ class AlphaVantageApi(stocks: Set<String>, cryptos: Set<String>) : StockApi {
     private val quotes: MutableMap<String, MutableMap<LocalDate, Double>> = mutableMapOf()
 
     init {
-        for (stock in stocks) {
+        for (stock in snapshotRepository.getAllStockSymbols()) {
             saveStockCurrency(stock)
             saveDailyQuoteForStock(stock)
         }
-        for (crypto in cryptos) {
+        for (crypto in snapshotRepository.getAllCryptoSymbols()) {
             saveCryptoCurrency(crypto)
             saveDailyQuoteForCrypto(crypto)
         }

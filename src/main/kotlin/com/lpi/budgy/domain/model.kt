@@ -88,7 +88,6 @@ data class MonetaryBalance(override val asset: Asset, val value: Double) : Balan
 // but consider a case when you have stocks and cryptos within single balance (revolut for example)
 // stocksAmounts should be modelled with more details
 
-// another thing is that if this is some kind of DTO it should not depend on some service like stockApi
 data class StocksBalance(
     override val asset: Asset,
     val stocksAmounts: Map<String, Double>,

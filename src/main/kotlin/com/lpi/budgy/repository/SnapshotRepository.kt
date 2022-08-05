@@ -15,24 +15,34 @@ class SnapshotRepository(
 
     fun getAll(): List<Snapshot> = data.map { it.toDomain() }.sortedBy { it.date }
 
+    fun getAllStockSymbols(): Set<String> =
+        getAll().flatMap { snapshot ->
+            snapshot.balances.filterIsInstance<StocksBalance>().filterNot { it.isCrypto }
+        }.flatMap { it.stocksAmounts.keys }.toSet()
+
+    fun getAllCryptoSymbols(): Set<String> =
+        getAll().flatMap { snapshot ->
+            snapshot.balances.filterIsInstance<StocksBalance>().filter { it.isCrypto }
+        }.flatMap { it.stocksAmounts.keys }.toSet()
+
     private fun SnapshotEntity.toDomain(): Snapshot =
         Snapshot(
             date = date,
-            balances = balances.map {it.toDomain() }.toSet()
+            balances = balances.map { it.toDomain() }.toSet()
         )
 
     private fun BalanceEntity.toDomain(): Balance =
         when (this) {
-        is MonetaryBalanceEntity -> MonetaryBalance(
-            asset = assetRepository.find(assetId),
-            value = value
-        )
-        is StocksBalanceEntity -> StocksBalance(
-            asset = assetRepository.find(assetId),
-            stocksAmounts = stocksAmounts,
-            isCrypto = isCrypto
-        )
-    }
+            is MonetaryBalanceEntity -> MonetaryBalance(
+                asset = assetRepository.find(assetId),
+                value = value
+            )
+            is StocksBalanceEntity -> StocksBalance(
+                asset = assetRepository.find(assetId),
+                stocksAmounts = stocksAmounts,
+                isCrypto = isCrypto
+            )
+        }
 }
 
 

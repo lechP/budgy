@@ -10,14 +10,10 @@ import com.lpi.budgy.config.Config
 import com.lpi.budgy.currency.CurrencyConverter
 import com.lpi.budgy.domain.Book
 import com.lpi.budgy.domain.Snapshot
-import com.lpi.budgy.domain.StocksBalance
 import com.lpi.budgy.report.TerminalReport
 import com.lpi.budgy.report.TerminalReportOptions
 import com.lpi.budgy.report.WebReport
-import com.lpi.budgy.repository.AssetRepository
-import com.lpi.budgy.repository.CurrencyRepository
-import com.lpi.budgy.repository.InstitutionRepository
-import com.lpi.budgy.repository.RiskLevelRepository
+import com.lpi.budgy.repository.*
 import com.lpi.budgy.stock.AlphaVantageApi
 import com.lpi.budgy.stock.StockApi
 import org.kodein.di.DI
@@ -37,12 +33,10 @@ class Budgy(
     private val web by option(help = "Start a web server").flag()
 
     override fun run() {
-        val (stocks, cryptos) = snapshots.stockAndCryptoSymbols()
 
         DI.global.addConfig {
             bindSingleton { Config() }
             bindSingleton { CurrencyConverter() }
-            bindSingleton<StockApi> { AlphaVantageApi(stocks, cryptos) }
             bindSingleton { CacheReader(".cache") }
 
             bindSingleton { CurrencyRepository() }
@@ -50,6 +44,8 @@ class Budgy(
             bindSingleton { RiskLevelRepository() }
 
             bindSingleton { AssetRepository(instance(), instance(), instance()) }
+            bindSingleton { SnapshotRepository(instance()) }
+            bindSingleton<StockApi> { AlphaVantageApi(instance()) }
         }
 
 
@@ -65,22 +61,4 @@ class Budgy(
         }
     }
 
-    // ohh refactor me (start with splitting StocksBalance into SharesBalance and CryptosBalance
-    private fun List<Snapshot>.stockAndCryptoSymbols(): Pair<Set<String>, Set<String>> {
-        val stocks = mutableSetOf<String>()
-        val cryptos = mutableSetOf<String>()
-        forEach { snapshot ->
-            for (balance in snapshot.balances) {
-                if (balance is StocksBalance) {
-                    val symbols = balance.stocksAmounts.keys
-                    if (balance.isCrypto) {
-                        cryptos.addAll(symbols)
-                    } else {
-                        stocks.addAll(symbols)
-                    }
-                }
-            }
-        }
-        return Pair(stocks, cryptos)
-    }
 }
