@@ -3,6 +3,7 @@ package com.lpi.budgy.report
 import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.lpi.budgy.domain.Book
 import com.lpi.budgy.domain.Snapshot
+import com.lpi.budgy.repository.SnapshotRepository
 import freemarker.cache.ClassTemplateLoader
 import freemarker.core.HTMLOutputFormat
 import io.ktor.server.application.*
@@ -14,9 +15,10 @@ import io.ktor.server.routing.*
 
 class WebReport(
     private val book: Book,
-    private val snapshots: List<Snapshot>
+    snapshotRepository: SnapshotRepository
 ) {
 
+    private val snapshots = snapshotRepository.getAll()
     private fun snapshotTotals(): Map<String, Double> = snapshots.associate {
         it.date.toString() to snapshotTotal(it)
     }

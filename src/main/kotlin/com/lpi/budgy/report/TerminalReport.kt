@@ -6,6 +6,7 @@ import com.github.ajalt.mordant.rendering.TextColors
 import com.github.ajalt.mordant.table.*
 import com.github.ajalt.mordant.terminal.Terminal
 import com.lpi.budgy.domain.*
+import com.lpi.budgy.repository.SnapshotRepository
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -17,9 +18,11 @@ data class TerminalReportOptions(
 
 class TerminalReport(
     private val book: Book,
-    private val snapshots: List<Snapshot>,
+    snapshotRepository: SnapshotRepository,
     private val options: TerminalReportOptions = TerminalReportOptions()
 ) {
+
+    private val snapshots = snapshotRepository.getAll()
 
     private val dateFormat = DateTimeFormatter.ofPattern("MMM dd, u")
 

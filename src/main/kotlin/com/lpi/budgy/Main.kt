@@ -27,13 +27,9 @@ fun main(args: Array<String>) {
     )
 
     /* TODO
-    4. upgrade dependency injection reduce main to Budgy(book).main(args)
     5. remove stockApi from StocksBalance - use some service instead
     6. get rid of DI.global.instance
      */
 
-    val snapshotRepository = SnapshotRepository(assetRepository)
-    val snapshots = snapshotRepository.getAll()
-
-    Budgy(book, snapshots).main(args)
+    Budgy(book).main(args)
 }

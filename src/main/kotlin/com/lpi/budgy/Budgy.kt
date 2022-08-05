@@ -22,8 +22,7 @@ import org.kodein.di.conf.global
 import org.kodein.di.instance
 
 class Budgy(
-    private val book: Book,
-    private val snapshots: List<Snapshot>
+    private val book: Book
 ) : CliktCommand() {
 
     private val displayTotalsByRiskLevel by option(help = "Display totals by risk level").flag()
@@ -33,6 +32,12 @@ class Budgy(
     private val web by option(help = "Start a web server").flag()
 
     override fun run() {
+
+        val options = TerminalReportOptions(
+            displayTotalsByRiskLevel = displayTotalsByRiskLevel,
+            displayTags = displayTags,
+            filterByTag = filterByTag
+        )
 
         DI.global.addConfig {
             bindSingleton { Config() }
@@ -46,18 +51,19 @@ class Budgy(
             bindSingleton { AssetRepository(instance(), instance(), instance()) }
             bindSingleton { SnapshotRepository(instance()) }
             bindSingleton<StockApi> { AlphaVantageApi(instance()) }
+
+            bindSingleton { WebReport(book, instance()) }
+            bindSingleton { TerminalReport(book, instance(), options) }
         }
 
 
-        val options = TerminalReportOptions(
-            displayTotalsByRiskLevel = displayTotalsByRiskLevel,
-            displayTags = displayTags,
-            filterByTag = filterByTag
-        )
+
         if (web) {
-            WebReport(book, snapshots).display()
+            val webReport: WebReport by DI.global.instance()
+            webReport.display()
         } else {
-            TerminalReport(book, snapshots, options).displayAsTable()
+            val terminalReport: TerminalReport by DI.global.instance()
+            terminalReport.displayAsTable()
         }
     }
 
