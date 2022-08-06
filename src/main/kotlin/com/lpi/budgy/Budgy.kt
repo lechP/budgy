@@ -15,6 +15,7 @@ import com.lpi.budgy.report.WebReport
 import com.lpi.budgy.repository.*
 import com.lpi.budgy.stock.AlphaVantageApi
 import com.lpi.budgy.stock.StockApi
+import com.lpi.budgy.valuation.ValuationService
 import org.kodein.di.DI
 import org.kodein.di.bindSingleton
 import org.kodein.di.conf.global
@@ -39,6 +40,7 @@ class Budgy(
         )
 
         DI.global.addConfig {
+            // TODO read more about DI, how those singletons might be improved?
             bindSingleton { Config() }
             bindSingleton { CurrencyConverter(instance()) }
             bindSingleton { CacheReader(".cache") }
@@ -49,10 +51,12 @@ class Budgy(
 
             bindSingleton { AssetRepository(instance(), instance(), instance()) }
             bindSingleton { SnapshotRepository(instance()) }
+
             bindSingleton<StockApi> { AlphaVantageApi(instance(), instance(), instance(), instance()) }
+            bindSingleton { ValuationService(instance(), instance()) }
 
             bindSingleton { WebReport(book, instance()) }
-            bindSingleton { TerminalReport(book, instance(), options) }
+            bindSingleton { TerminalReport(book, instance(), instance(), options) }
         }
 
 
