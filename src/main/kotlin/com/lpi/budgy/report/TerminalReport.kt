@@ -7,6 +7,7 @@ import com.github.ajalt.mordant.table.*
 import com.github.ajalt.mordant.terminal.Terminal
 import com.lpi.budgy.domain.*
 import com.lpi.budgy.repository.SnapshotRepository
+import com.lpi.budgy.valuation.ValuationService
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -19,6 +20,7 @@ data class TerminalReportOptions(
 class TerminalReport(
     private val book: Book,
     snapshotRepository: SnapshotRepository,
+    private val valuationService: ValuationService,
     private val options: TerminalReportOptions = TerminalReportOptions()
 ) {
 
@@ -124,19 +126,23 @@ class TerminalReport(
         Terminal().println(table)
     }
 
-    // TODO balance might be displayed in original and main currency
+    // balance might be displayed in original and main currency
     private fun formatBalance(balance: Balance?, date: LocalDate) =
-        balance?.let { formatAmount(it.toValue(book.mainCurrency, date)) } ?: "-"
+        balance?.let {
+            formatAmount(
+                valuationService.value(it, book.mainCurrency, date)
+            )
+        } ?: "-"
 
     private fun formatAmount(amount: Double) = String.format("%,.0f", amount)
 
     private fun Snapshot.total() =
-        balances.filter { it.asset.matchesTagFilter() }.sumOf { it.toValue(book.mainCurrency, date) }
+        balances.filter { it.asset.matchesTagFilter() }.sumOf { valuationService.value(it, book.mainCurrency, date) }
 
     private fun Snapshot.totalForRiskLevel(riskLevel: RiskLevel) =
         balances.filter {
             it.asset.metadata.riskLevel == riskLevel && it.asset.matchesTagFilter()
-        }.sumOf { it.toValue(book.mainCurrency, date) }
+        }.sumOf { valuationService.value(it, book.mainCurrency, date) }
 
     private fun Snapshot.percentageForRiskLevel(riskLevel: RiskLevel) = totalForRiskLevel(riskLevel) / total()
 
