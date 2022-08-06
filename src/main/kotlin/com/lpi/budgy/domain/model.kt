@@ -54,9 +54,9 @@ data class Property(
 data class Account(
     val institution: Institution,
     override val name: String,
-    override val currency: Currency,
+    override val currency: Currency, // TODO Currency doesnt make sense for StocksBalances where each stock may have its own currency
     override val metadata: AssetMetadata = AssetMetadata(),
-    override val id: String = name,
+    override val id: String = name, // TODO make mandatory
 ): Asset() {
     fun monetaryBalance(value: Double) = MonetaryBalance(this, value)
     fun monetaryBalance(value: Int) = MonetaryBalance(this, value.toDouble())
