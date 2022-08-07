@@ -1,3 +1,4 @@
+<#-- @ftlvariable name="valuationService" type="com.lpi.budgy.valuation.ValuationService" -->
 <#-- @ftlvariable name="snapshotTotals" type="java.util.Map" -->
 <#-- @ftlvariable name="book" type="com.lpi.budgy.domain.Book" -->
 <#-- @ftlvariable name="snapshots" type="com.lpi.budgy.domain.Snapshot[]" -->
@@ -74,7 +75,7 @@
                     <#list snapshots as snapshot>
                         <td class="text-right tabular-nums">
                             <#if (snapshot.assetBalance(account))??>
-                                ${snapshot.assetBalance(account).toValue(book.mainCurrency,snapshot.date)?round}
+                                ${valuationService.value(snapshot.assetBalance(account), book.mainCurrency, snapshot.date)?round}
                             <#else>-
                             </#if>
                         </td>
@@ -94,7 +95,7 @@
                 <#list snapshots as snapshot>
                     <td class="text-right tabular-nums">
                         <#if (snapshot.assetBalance(property))??>
-                            ${snapshot.assetBalance(property).toValue(book.mainCurrency,snapshot.date)?round}
+                            ${valuationService.value(snapshot.assetBalance(property), book.mainCurrency, snapshot.date)?round}
                         <#else>-
                         </#if>
                     </td>

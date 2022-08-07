@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.lpi.budgy.domain.Book
 import com.lpi.budgy.domain.Snapshot
 import com.lpi.budgy.repository.SnapshotRepository
+import com.lpi.budgy.valuation.ValuationService
 import freemarker.cache.ClassTemplateLoader
 import freemarker.core.HTMLOutputFormat
 import io.ktor.server.application.*
@@ -15,7 +16,8 @@ import io.ktor.server.routing.*
 
 class WebReport(
     private val book: Book,
-    snapshotRepository: SnapshotRepository
+    snapshotRepository: SnapshotRepository,
+    private val valuationService: ValuationService,
 ) {
 
     private val snapshots = snapshotRepository.getAll()
@@ -24,15 +26,15 @@ class WebReport(
     }
 
     private fun snapshotTotal(snapshot: Snapshot) =
-        snapshot.balances.sumOf { balance -> balance.toValue(book.mainCurrency, snapshot.date) }
+        snapshot.balances.sumOf { balance -> valuationService.value(balance, book.mainCurrency, snapshot.date) }
 
     private fun chartDataByAsset(): List<List<*>> {
         val headers = listOf("Date") + book.assets.map { it.name } + listOf("Total")
         val rows = snapshots.map { snapshot ->
             val assetRows = book.assets.map {
-                snapshot.assetBalance(it)?.toValue(
-                    book.mainCurrency, snapshot.date
-                )
+                snapshot.assetBalance(it)?.let { balance ->
+                    valuationService.value(balance, book.mainCurrency, snapshot.date)
+                }
             }
             listOf(snapshot.date.toString() + "T00:00:00") +
                     assetRows + listOf(snapshotTotal(snapshot))
@@ -58,6 +60,7 @@ class WebReport(
                                 "book" to book,
                                 "snapshots" to snapshots,
                                 "snapshotTotals" to snapshotTotals(),
+                                "valuationService" to valuationService,
                                 "chartDataByAccountJson" to jsonMapper().writeValueAsString(chartDataByAsset())
                             )
                         )

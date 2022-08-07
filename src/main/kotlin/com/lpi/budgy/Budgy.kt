@@ -55,7 +55,7 @@ class Budgy(
             bindSingleton<StockApi> { AlphaVantageApi(instance(), instance(), instance(), instance()) }
             bindSingleton { ValuationService(instance(), instance()) }
 
-            bindSingleton { WebReport(book, instance()) }
+            bindSingleton { WebReport(book, instance(), instance()) }
             bindSingleton { TerminalReport(book, instance(), instance(), options) }
         }
 
