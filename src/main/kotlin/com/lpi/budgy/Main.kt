@@ -27,8 +27,6 @@ fun main(args: Array<String>) {
     )
 
     /* TODO
-    5a. remove stockApi from StocksBalance - use some service instead
-    5b. remove currencyConverter from MonetaryBalance - use some service instead
     7. use KTOR client instead of plain java.net
     8. add offline mode for CurrencyConverter and StockApi
     9. use same convention for CurrencyConverter and StockApi (example: CurrencyClient and StockClient)

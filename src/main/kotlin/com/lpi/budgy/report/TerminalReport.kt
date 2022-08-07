@@ -30,7 +30,7 @@ class TerminalReport(
 
     private val table = table {
         column(0) { width = ColumnWidth.Fixed(4) }
-        column(1) { width = ColumnWidth.Fixed(book.assets.map { it.label().length }.max() + 2) }
+        column(1) { width = ColumnWidth.Fixed(book.assets.maxOf { it.label().length } + 2) }
         borderStyle = BorderStyle.SQUARE_DOUBLE_SECTION_SEPARATOR
         headerRow()
         assetsRows()
